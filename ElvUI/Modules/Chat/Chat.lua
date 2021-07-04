@@ -733,7 +733,7 @@ function CH:StyleChat(frame)
 	copyButton:EnableMouse(true)
 	copyButton:SetAlpha(0.35)
 	copyButton:Size(20, 22)
-	copyButton:Point('TOPRIGHT', -1, -3)
+	copyButton:Point('TOPRIGHT', 1, 3)
 	copyButton:SetFrameLevel(frame:GetFrameLevel() + 5)
 	frame.copyButton = copyButton
 
@@ -2109,8 +2109,8 @@ function CH:SetupChat()
 
 	local chat = _G.GeneralDockManager.primary
 	_G.GeneralDockManager:ClearAllPoints()
-	_G.GeneralDockManager:Point('BOTTOMLEFT', chat, 'TOPLEFT', -1, 6)
-	_G.GeneralDockManager:Point('BOTTOMRIGHT', chat, 'TOPRIGHT', -1, 6)
+	_G.GeneralDockManager:Point('BOTTOMLEFT', chat, 'TOPLEFT', 1, 6)
+	_G.GeneralDockManager:Point('BOTTOMRIGHT', chat, 'TOPRIGHT', 1, 6)
 	_G.GeneralDockManager:Height(22)
 	_G.GeneralDockManagerScrollFrame:Height(22)
 	_G.GeneralDockManagerScrollFrameChild:Height(22)
