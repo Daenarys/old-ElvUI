@@ -69,15 +69,15 @@ end
 local function SkinOverviewInfo(self, _, index)
 	local header = self.overviews[index]
 	if not header.isSkinned then
-	
-		header.descriptionBG:SetAlpha(0)
-		header.descriptionBGBottom:SetAlpha(0)
 		for i = 4, 18 do
 			select(i, header.button:GetRegions()):SetTexture()
 		end
 
 		HandleButton(header.button)
 
+		header.descriptionBG:SetAlpha(0)
+		header.descriptionBGBottom:SetAlpha(0)
+		header.description:SetTextColor(1, 1, 1)
 		header.button.title:SetTextColor(unpack(E.media.rgbvaluecolor))
 		header.button.title.SetTextColor = E.noop
 		header.button.expandedIcon:SetTextColor(1, 1, 1)
@@ -150,25 +150,32 @@ function S:Blizzard_EncounterJournal()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.encounterjournal) then return end
 
 	local EJ = _G.EncounterJournal
-	S:HandlePortraitFrame(EJ)
+	S:HandlePortraitFrame(EJ, true)
 
 	EJ.navBar:StripTextures(true)
 	EJ.navBar.overlay:StripTextures(true)
 
 	EJ.navBar:CreateBackdrop()
-	EJ.navBar.backdrop:Point('TOPLEFT', -2, 0)
-	EJ.navBar.backdrop:Point('BOTTOMRIGHT')
+	EJ.navBar.backdrop:Point("TOPLEFT", -2, 0)
+	EJ.navBar.backdrop:Point("BOTTOMRIGHT")
 	HandleButton(EJ.navBar.home, true)
 	EJ.navBar.home.xoffset = 1
 
 	S:HandleEditBox(EJ.searchBox)
 	EJ.searchBox:ClearAllPoints()
-	EJ.searchBox:Point('TOPLEFT', EJ.navBar, 'TOPRIGHT', 19, -10)
+	EJ.searchBox:Point("TOPLEFT", EJ.navBar, "TOPRIGHT", 4, 0)
 
 	local InstanceSelect = EJ.instanceSelect
-	InstanceSelect.bg:Kill()
 
+	EJ.instanceSelect.bg:Kill()
 	S:HandleDropDownBox(InstanceSelect.tierDropDown)
+	EJ.instanceSelect.tierDropDown:HookScript("OnShow", function(s)
+		local text = s.Text
+		local a, b, c, d, e = text:GetPoint()
+		text:Point(a, b, c, d + 10, e - 4)
+		text:Width(s:GetWidth() / 1.4)
+	end)
+
 	S:HandleScrollBar(InstanceSelect.scroll.ScrollBar, 6)
 	HandleTopTabs(InstanceSelect.suggestTab)
 	HandleTopTabs(InstanceSelect.dungeonsTab)
@@ -199,7 +206,8 @@ function S:Blizzard_EncounterJournal()
 
 	--Encounter Info Frame
 	local EncounterInfo = EJ.encounter.info
-	EncounterInfo:SetTemplate('Transparent')
+	EncounterInfo:CreateBackdrop("Transparent")
+	EncounterInfo.backdrop:SetOutside(_G.EncounterJournalEncounterFrameInfoBG)
 
 	--_G.EncounterJournalEncounterFrameInfoBG:Kill()
 	_G.EncounterJournalEncounterFrameInfoBG:Height(385)
@@ -209,10 +217,10 @@ function S:Blizzard_EncounterJournal()
 	_G.EncounterJournalEncounterFrameInfoModelFrameShadow:Kill()
 
 	EncounterInfo.instanceButton:ClearAllPoints()
-	EncounterInfo.instanceButton:Point('TOPLEFT', EncounterInfo, 'TOPLEFT', 0, 15)
+	EncounterInfo.instanceButton:Point("TOPLEFT", EncounterInfo, "TOPLEFT", 0, 15)
 
 	EncounterInfo.instanceTitle:ClearAllPoints()
-	EncounterInfo.instanceTitle:Point('BOTTOM', EncounterInfo.bossesScroll, 'TOP', 10, 15)
+	EncounterInfo.instanceTitle:Point("BOTTOM", EncounterInfo.bossesScroll, "TOP", 10, 15)
 
 	_G.EncounterJournalEncounterFrameInfoLootScrollFrameClassFilterClearFrame:GetRegions():SetAlpha(0)
 
@@ -221,31 +229,31 @@ function S:Blizzard_EncounterJournal()
 
 	--buttons
 	EncounterInfo.difficulty:ClearAllPoints()
-	EncounterInfo.difficulty:Point('BOTTOMRIGHT', _G.EncounterJournalEncounterFrameInfoBG, 'TOPRIGHT', -5, 7)
+	EncounterInfo.difficulty:Point("BOTTOMRIGHT", _G.EncounterJournalEncounterFrameInfoBG, "TOPRIGHT", -1, 5)
 	HandleButton(EncounterInfo.reset)
 	HandleButton(EncounterInfo.difficulty)
 	HandleButton(_G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle, true)
 	HandleButton(_G.EncounterJournalEncounterFrameInfoLootScrollFrameFilterToggle, true)
 
 	_G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle:ClearAllPoints()
-	_G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle:Point('TOPLEFT', EncounterInfo, 'TOP', 0, -8)
+	_G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle:Point("BOTTOMLEFT", EncounterInfo.backdrop, "TOP", 0, 4)
 	_G.EncounterJournalEncounterFrameInfoLootScrollFrameFilterToggle:ClearAllPoints()
-	_G.EncounterJournalEncounterFrameInfoLootScrollFrameFilterToggle:Point('LEFT', _G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle, 'RIGHT', 4, 0)
+	_G.EncounterJournalEncounterFrameInfoLootScrollFrameFilterToggle:Point("LEFT", _G.EncounterJournalEncounterFrameInfoLootScrollFrameSlotFilterToggle, "RIGHT", 4, 0)
 
 	EncounterInfo.reset:ClearAllPoints()
-	EncounterInfo.reset:Point('TOPRIGHT', EncounterInfo.difficulty, 'TOPLEFT', -10, 0)
-	_G.EncounterJournalEncounterFrameInfoResetButtonTexture:SetTexture([[Interface\EncounterJournal\UI-EncounterJournalTextures]])
+	EncounterInfo.reset:Point("TOPRIGHT", EncounterInfo.difficulty, "TOPLEFT", -10, 0)
+	_G.EncounterJournalEncounterFrameInfoResetButtonTexture:SetTexture("Interface\\EncounterJournal\\UI-EncounterJournalTextures")
 	_G.EncounterJournalEncounterFrameInfoResetButtonTexture:SetTexCoord(0.90625000, 0.94726563, 0.00097656, 0.02050781)
 
 	S:HandleScrollBar(EncounterInfo.bossesScroll.ScrollBar, 6)
 	S:HandleScrollBar(_G.EncounterJournalEncounterFrameInstanceFrameLoreScrollFrameScrollBar)
 	_G.EncounterJournalEncounterFrameInstanceFrameBG:SetScale(0.85)
 	_G.EncounterJournalEncounterFrameInstanceFrameBG:ClearAllPoints()
-	_G.EncounterJournalEncounterFrameInstanceFrameBG:Point('CENTER', 0, 40)
+	_G.EncounterJournalEncounterFrameInstanceFrameBG:Point("CENTER", 0, 40)
 	_G.EncounterJournalEncounterFrameInstanceFrameTitle:ClearAllPoints()
-	_G.EncounterJournalEncounterFrameInstanceFrameTitle:Point('TOP', 0, -105)
+	_G.EncounterJournalEncounterFrameInstanceFrameTitle:Point("TOP", 0, -105)
 	_G.EncounterJournalEncounterFrameInstanceFrameMapButton:ClearAllPoints()
-	_G.EncounterJournalEncounterFrameInstanceFrameMapButton:Point('LEFT', 55, -56)
+	_G.EncounterJournalEncounterFrameInstanceFrameMapButton:Point("LEFT", 55, -56)
 
 	S:HandleScrollBar(EncounterInfo.overviewScroll.ScrollBar, 4)
 	S:HandleScrollBar(EncounterInfo.detailsScroll.ScrollBar, 4)
@@ -256,8 +264,9 @@ function S:Blizzard_EncounterJournal()
 	EncounterInfo.overviewScroll:Height(360)
 	EncounterInfo.bossesScroll:Height(360)
 	_G.EncounterJournalEncounterFrameInfoLootScrollFrame:Height(360)
-	_G.EncounterJournalEncounterFrameInfoLootScrollFrame:Point('TOPLEFT', _G.EncounterJournalEncounterFrameInfoLootScrollFrame:GetParent(), 'TOP', 20, -70)
-	_G.EncounterJournalEncounterFrameInfoLootScrollFrame:Point('BOTTOMRIGHT', _G.EncounterJournalEncounterFrameInfoLootScrollFrame:GetParent(), 'BOTTOMRIGHT', -10, 5)
+	_G.EncounterJournalEncounterFrameInfoLootScrollFrame:Point("TOPLEFT", _G.EncounterJournalEncounterFrameInfoLootScrollFrame:GetParent(), "TOP", 20, -70)
+	_G.EncounterJournalEncounterFrameInfoLootScrollFrame:Point("BOTTOMRIGHT", _G.EncounterJournalEncounterFrameInfoLootScrollFrame:GetParent(), "BOTTOMRIGHT", -10, 5)
+
 
 	--Tabs
 	EncounterInfo.overviewTab:Point('TOPLEFT', EncounterInfo, 'TOPRIGHT', E.PixelMode and -3 or 0, -35)
