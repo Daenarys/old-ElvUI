@@ -47,39 +47,37 @@ local function SkinDungeons()
 end
 
 local function SkinBosses()
-	local bossIndex = 1
-	local _, _, bossID = _G.EJ_GetEncounterInfoByIndex(bossIndex)
-	local bossButton
-
-	local encounter = _G.EncounterJournal.encounter
-	encounter.info.instanceButton.icon:SetMask("")
-
+	local bossIndex = 1;
+	local _, _, bossID = EJ_GetEncounterInfoByIndex(bossIndex);
+	local bossButton;
+	
 	while bossID do
-		bossButton = _G['EncounterJournalBossButton'..bossIndex]
+		bossButton = _G["EncounterJournalBossButton"..bossIndex];
 		if bossButton and not bossButton.isSkinned then
-			HandleButton(bossButton)
+			S:HandleButton(bossButton)
 			bossButton.creature:ClearAllPoints()
-			bossButton.creature:Point('TOPLEFT', 1, -4)
+			bossButton.creature:Point("TOPLEFT", 1, -4)
 			bossButton.isSkinned = true
 		end
-
-		bossIndex = bossIndex + 1
-		_, _, bossID = _G.EJ_GetEncounterInfoByIndex(bossIndex)
+		
+		bossIndex = bossIndex + 1;
+		_, _, bossID = EJ_GetEncounterInfoByIndex(bossIndex);
 	end
 end
+
 
 local function SkinOverviewInfo(self, _, index)
 	local header = self.overviews[index]
 	if not header.isSkinned then
+	
+		header.descriptionBG:SetAlpha(0)
+		header.descriptionBGBottom:SetAlpha(0)
 		for i = 4, 18 do
 			select(i, header.button:GetRegions()):SetTexture()
 		end
 
 		HandleButton(header.button)
 
-		header.descriptionBG:SetAlpha(0)
-		header.descriptionBGBottom:SetAlpha(0)
-		header.description:SetTextColor(1, 1, 1)
 		header.button.title:SetTextColor(unpack(E.media.rgbvaluecolor))
 		header.button.title.SetTextColor = E.noop
 		header.button.expandedIcon:SetTextColor(1, 1, 1)
@@ -165,7 +163,7 @@ function S:Blizzard_EncounterJournal()
 
 	S:HandleEditBox(EJ.searchBox)
 	EJ.searchBox:ClearAllPoints()
-	EJ.searchBox:Point('TOPLEFT', EJ.navBar, 'TOPRIGHT', 4, 0)
+	EJ.searchBox:Point('TOPLEFT', EJ.navBar, 'TOPRIGHT', 19, -10)
 
 	local InstanceSelect = EJ.instanceSelect
 	InstanceSelect.bg:Kill()
@@ -177,18 +175,18 @@ function S:Blizzard_EncounterJournal()
 	HandleTopTabs(InstanceSelect.raidsTab)
 	HandleTopTabs(InstanceSelect.LootJournalTab)
 
-	InstanceSelect.suggestTab:ClearAllPoints()
-	InstanceSelect.suggestTab:Width(175)
-	InstanceSelect.suggestTab:Point('BOTTOMLEFT', InstanceSelect, 'TOPLEFT', 2, -43)
+	InstanceSelect.suggestTab.backdrop:SetTemplate("Default", true)
+	InstanceSelect.dungeonsTab.backdrop:SetTemplate("Default", true)
+	InstanceSelect.raidsTab.backdrop:SetTemplate("Default", true)
+	InstanceSelect.LootJournalTab.backdrop:SetTemplate("Default", true)
+	InstanceSelect.suggestTab:Width(173)
+	InstanceSelect.dungeonsTab:Width(98)
 	InstanceSelect.dungeonsTab:ClearAllPoints()
-	InstanceSelect.dungeonsTab:Width(125)
-	InstanceSelect.dungeonsTab:Point('BOTTOMLEFT', InstanceSelect.suggestTab, 'BOTTOMRIGHT', 2, 0)
+	InstanceSelect.dungeonsTab:Point("BOTTOMLEFT", InstanceSelect.suggestTab, "BOTTOMRIGHT", 0, 0)
 	InstanceSelect.raidsTab:ClearAllPoints()
-	InstanceSelect.raidsTab:Width(125)
-	InstanceSelect.raidsTab:Point('BOTTOMLEFT', InstanceSelect.dungeonsTab, 'BOTTOMRIGHT', 2, 0)
+	InstanceSelect.raidsTab:Point("BOTTOMLEFT", InstanceSelect.dungeonsTab, "BOTTOMRIGHT", 0, 0)
 	InstanceSelect.LootJournalTab:ClearAllPoints()
-	InstanceSelect.LootJournalTab:Width(125)
-	InstanceSelect.LootJournalTab:Point('BOTTOMLEFT', InstanceSelect.raidsTab, 'BOTTOMRIGHT', 2, 0)
+	InstanceSelect.LootJournalTab:Point("BOTTOMLEFT", InstanceSelect.raidsTab, "BOTTOMRIGHT", 0, 0)
 
 	--Skin the tab text
 	for i = 1, #InstanceSelect.Tabs do
