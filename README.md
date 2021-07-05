@@ -8,7 +8,3 @@ Changes so far:
 - Reverted Garrison/Orderhall/Mission/Covenant mission page, ugly backdrop that was added in 9.1 now gone.
 - Reverted Spec and Durability datatexts
 - Reverted Chat Tab height and moved text position to the left
-
-To-Do:
-
--
