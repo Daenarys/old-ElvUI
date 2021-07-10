@@ -1,6 +1,14 @@
 ### Version 12.34 [ ETA: 🍨 ]
 
-**Nice:**  
+Nice:
+Added mover for the Maw Buffs widget in raid/dungeons.
+Removed Guide text from mentor chat, icon will still show.
+Added some options for the top and bottom cosmetic panels (under the new cosmetic tab, under general).
+Fixed Unitframe Custom Color options for Castbars not properly updating when switching between characters on same profile.
+Fixed issue with Ultrawide / Eyefinity not letting you move frames to the left screen.
+Fixed Spellbook error in combat (happened when leveling).
+Added Mistweaver PVP Buffs (Peaceweaver and Dematerialize) to the Whitelist.
+Fixed Player Choice skin in Mythic+
 
 
 ___

@@ -47,24 +47,26 @@ local function SkinDungeons()
 end
 
 local function SkinBosses()
-	local bossIndex = 1;
-	local _, _, bossID = EJ_GetEncounterInfoByIndex(bossIndex);
-	local bossButton;
-	
+	local bossIndex = 1
+	local _, _, bossID = _G.EJ_GetEncounterInfoByIndex(bossIndex)
+	local bossButton
+
+	local encounter = _G.EncounterJournal.encounter
+	encounter.info.instanceButton.icon:SetMask("")
+
 	while bossID do
-		bossButton = _G["EncounterJournalBossButton"..bossIndex];
+		bossButton = _G['EncounterJournalBossButton'..bossIndex]
 		if bossButton and not bossButton.isSkinned then
-			S:HandleButton(bossButton)
+			HandleButton(bossButton)
 			bossButton.creature:ClearAllPoints()
-			bossButton.creature:Point("TOPLEFT", 1, -4)
+			bossButton.creature:Point('TOPLEFT', 1, -4)
 			bossButton.isSkinned = true
 		end
-		
-		bossIndex = bossIndex + 1;
-		_, _, bossID = EJ_GetEncounterInfoByIndex(bossIndex);
+
+		bossIndex = bossIndex + 1
+		_, _, bossID = _G.EJ_GetEncounterInfoByIndex(bossIndex)
 	end
 end
-
 
 local function SkinOverviewInfo(self, _, index)
 	local header = self.overviews[index]
@@ -98,6 +100,17 @@ local function SkinOverviewInfoBullets(object)
 			end
 		end
 	end
+end
+
+local function HandleTabs(tab)
+	tab:StripTextures()
+	tab:SetText(tab.tooltip)
+	tab:GetFontString():FontTemplate(nil, nil, '')
+	tab:SetTemplate()
+	tab:SetScript('OnEnter', E.noop)
+	tab:SetScript('OnLeave', E.noop)
+	tab:Size(tab:GetFontString():GetStringWidth()*1.5, 20)
+	tab.SetPoint = E.noop
 end
 
 local function SkinAbilitiesInfo()
@@ -149,43 +162,44 @@ end
 function S:Blizzard_EncounterJournal()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.encounterjournal) then return end
 
-	local EJ = _G["EncounterJournal"]
-	EJ:StripTextures(true)
-	EJ.inset:StripTextures(true)
-	EJ:CreateBackdrop("Transparent")
+	local EJ = _G.EncounterJournal
+	S:HandlePortraitFrame(EJ)
 
 	EJ.navBar:StripTextures(true)
 	EJ.navBar.overlay:StripTextures(true)
 
-	EJ.navBar:CreateBackdrop("Default")
-	EJ.navBar.backdrop:Point("TOPLEFT", -2, 0)
-	EJ.navBar.backdrop:Point("BOTTOMRIGHT")
-	S:HandleButton(EJ.navBar.home, true)
+	EJ.navBar:CreateBackdrop()
+	EJ.navBar.backdrop:Point('TOPLEFT', -2, 0)
+	EJ.navBar.backdrop:Point('BOTTOMRIGHT')
+	HandleButton(EJ.navBar.home, true)
+	EJ.navBar.home.xoffset = 1
 
 	S:HandleEditBox(EJ.searchBox)
-	S:HandleCloseButton(EncounterJournalCloseButton)
-	
-	--Instance Selection Frame
+	EJ.searchBox:ClearAllPoints()
+	EJ.searchBox:Point('TOPLEFT', EJ.navBar, 'TOPRIGHT', 4, 0)
+
 	local InstanceSelect = EJ.instanceSelect
 	InstanceSelect.bg:Kill()
+
 	S:HandleDropDownBox(InstanceSelect.tierDropDown)
-	S:HandleScrollBar(InstanceSelect.scroll.ScrollBar, 4)
-	S:HandleTab(InstanceSelect.suggestTab)
-	S:HandleTab(InstanceSelect.dungeonsTab)
-	S:HandleTab(InstanceSelect.raidsTab)
-	S:HandleTab(InstanceSelect.LootJournalTab)
-	InstanceSelect.suggestTab.backdrop:SetTemplate("Default", true)
-	InstanceSelect.dungeonsTab.backdrop:SetTemplate("Default", true)
-	InstanceSelect.raidsTab.backdrop:SetTemplate("Default", true)
-	InstanceSelect.LootJournalTab.backdrop:SetTemplate("Default", true)
-	InstanceSelect.suggestTab:Width(173)
-	InstanceSelect.dungeonsTab:Width(98)
+	S:HandleScrollBar(InstanceSelect.scroll.ScrollBar, 6)
+	HandleTopTabs(InstanceSelect.suggestTab)
+	HandleTopTabs(InstanceSelect.dungeonsTab)
+	HandleTopTabs(InstanceSelect.raidsTab)
+	HandleTopTabs(InstanceSelect.LootJournalTab)
+
+	InstanceSelect.suggestTab:ClearAllPoints()
+	InstanceSelect.suggestTab:Width(175)
+	InstanceSelect.suggestTab:Point('BOTTOMLEFT', InstanceSelect, 'TOPLEFT', 2, -43)
 	InstanceSelect.dungeonsTab:ClearAllPoints()
-	InstanceSelect.dungeonsTab:Point("BOTTOMLEFT", InstanceSelect.suggestTab, "BOTTOMRIGHT", 0, 0)
+	InstanceSelect.dungeonsTab:Width(125)
+	InstanceSelect.dungeonsTab:Point('BOTTOMLEFT', InstanceSelect.suggestTab, 'BOTTOMRIGHT', 2, 0)
 	InstanceSelect.raidsTab:ClearAllPoints()
-	InstanceSelect.raidsTab:Point("BOTTOMLEFT", InstanceSelect.dungeonsTab, "BOTTOMRIGHT", 0, 0)
+	InstanceSelect.raidsTab:Width(125)
+	InstanceSelect.raidsTab:Point('BOTTOMLEFT', InstanceSelect.dungeonsTab, 'BOTTOMRIGHT', 2, 0)
 	InstanceSelect.LootJournalTab:ClearAllPoints()
-	InstanceSelect.LootJournalTab:Point("BOTTOMLEFT", InstanceSelect.raidsTab, "BOTTOMRIGHT", 0, 0)
+	InstanceSelect.LootJournalTab:Width(125)
+	InstanceSelect.LootJournalTab:Point('BOTTOMLEFT', InstanceSelect.raidsTab, 'BOTTOMRIGHT', 2, 0)
 
 	--Skin the tab text
 	for i = 1, #InstanceSelect.Tabs do
@@ -193,7 +207,7 @@ function S:Blizzard_EncounterJournal()
 		local text = tab:GetFontString()
 
 		text:FontTemplate()
-		text:SetPoint("CENTER")
+		text:Point('CENTER')
 	end
 
 	--Encounter Info Frame
