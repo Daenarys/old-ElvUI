@@ -102,7 +102,6 @@ P.general = {
 			},
 			mail = {
 				scale = 1,
-				texture = 'Mail3',
 				position = 'TOPRIGHT',
 				xOffset = 3,
 				yOffset = 4,
