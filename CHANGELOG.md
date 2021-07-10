@@ -1,4 +1,4 @@
-### Version 12.34 [ ETA: 🍨 ]
+### Version 12.34 [ July 8th 2021 ]
 
 Nice:
 Added mover for the Maw Buffs widget in raid/dungeons.
