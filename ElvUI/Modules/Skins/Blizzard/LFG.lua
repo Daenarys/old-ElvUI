@@ -316,25 +316,15 @@ function S:LookingForGroupFrames()
 	end)
 
 	for i = 1, 3 do
-		local bu = GroupFinderFrame["groupButton"..i]
+		local bu = _G.GroupFinderFrame["groupButton"..i]
+		bu.ring:Kill()
+		bu.bg:Kill()
+		S:HandleButton(bu)
 
-		bu.ring:Hide()
-		bu.bg:SetTexture("")
-		bu.bg:SetAllPoints()
-
-		bu:SetTemplate()
-		bu:StyleButton()
-
-		bu.icon:SetTexCoord(unpack(E.TexCoords))
-		bu.icon:Point("LEFT", bu, "LEFT")
-		bu.icon:SetDrawLayer("OVERLAY")
 		bu.icon:Size(45)
 		bu.icon:ClearAllPoints()
 		bu.icon:Point("LEFT", 10, 0)
-		bu.border = CreateFrame("Frame", nil, bu)
-		bu.border:SetTemplate('Default')
-		bu.border:SetOutside(bu.icon)
-		bu.icon:SetParent(bu.border)
+		S:HandleIcon(bu.icon, true)
 	end
 
 	for i = 1, 3 do

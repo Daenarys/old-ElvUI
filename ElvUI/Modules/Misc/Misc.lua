@@ -241,6 +241,7 @@ end
 
 function M:PLAYER_ENTERING_WORLD()
 	self:ForceCVars()
+	self:ToggleChatBubbleScript()
 end
 
 function M:RESURRECT_REQUEST()
