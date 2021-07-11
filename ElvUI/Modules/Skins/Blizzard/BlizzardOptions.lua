@@ -90,9 +90,7 @@ function S:BlizzardOptions()
 		end
 	end)
 
-	_G.RolePollPopup:StripTextures()
-	_G.RolePollPopup:SetTemplate('Transparent')
-	S:HandleCloseButton(_G.RolePollPopupCloseButton)
+	_G.RolePollPopup:SetTemplate("Transparent")
 
 	_G.InterfaceOptionsFrame:SetClampedToScreen(true)
 	_G.InterfaceOptionsFrame:SetMovable(true)
@@ -396,25 +394,8 @@ function S:BlizzardOptions()
 	end
 
 	_G.InterfaceOptionsFrameTab1:Point('BOTTOMLEFT', _G.InterfaceOptionsFrameCategories, 'TOPLEFT', 6, 1)
-	_G.InterfaceOptionsFrameTab1:StripTextures()
 	_G.InterfaceOptionsFrameTab2:Point('TOPLEFT', _G.InterfaceOptionsFrameTab1, 'TOPRIGHT', 1, 0)
-	_G.InterfaceOptionsFrameTab2:StripTextures()
-	_G.InterfaceOptionsSocialPanel.EnableTwitter.Logo:SetAtlas('WoWShare-TwitterLogo')
-
-	do -- plus minus buttons in addons category
-		local function skinButtons()
-			for i = 1, #_G.INTERFACEOPTIONS_ADDONCATEGORIES do
-				local button = _G['InterfaceOptionsFrameAddOnsButton'..i..'Toggle']
-				if button and not button.IsSkinned then
-					S:HandleCollapseTexture(button, true)
-					button.IsSkinned = true
-				end
-			end
-		end
-
-		hooksecurefunc('InterfaceOptions_AddCategory', skinButtons)
-		skinButtons()
-	end
+	_G.InterfaceOptionsSocialPanel.EnableTwitter.Logo:SetAtlas("WoWShare-TwitterLogo")
 
 	--Create New Raid Profle
 	local newProfileDialog = _G.CompactUnitFrameProfilesNewProfileDialog
