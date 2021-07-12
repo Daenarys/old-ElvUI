@@ -9,7 +9,6 @@ local unpack = unpack
 local hooksecurefunc = hooksecurefunc
 local CreateFrame = CreateFrame
 
-local LFG_ICONS = [[Interface\LFGFrame\UI-LFG-ICONS-ROLEBACKGROUNDS]]
 local function SkinNavBarButtons(self)
 	if (self:GetParent():GetName() == 'EncounterJournal' and not E.private.skins.blizzard.encounterjournal) or (self:GetParent():GetName() == 'WorldMapFrame' and not E.private.skins.blizzard.worldmap) or (self:GetParent():GetName() == 'HelpFrameKnowledgebase' and not E.private.skins.blizzard.help) then
 		return
@@ -61,7 +60,7 @@ function S:BlizzardMiscFrames()
 		if isDPS then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
 				nextRoleIcon = nextRoleIcon + 1
 			end
@@ -69,7 +68,7 @@ function S:BlizzardMiscFrames()
 		if isHealer then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 				nextRoleIcon = nextRoleIcon + 1
 			end
@@ -77,7 +76,7 @@ function S:BlizzardMiscFrames()
 		if isTank then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			end
 		end
@@ -85,9 +84,9 @@ function S:BlizzardMiscFrames()
 
 	hooksecurefunc('QueueStatusFrame_Update', function()
 		for frame in _G.QueueStatusFrame.statusEntriesPool:EnumerateActive() do
-			frame.HealersFound.Texture:SetTexture(LFG_ICONS)
-			frame.TanksFound.Texture:SetTexture(LFG_ICONS)
-			frame.DamagersFound.Texture:SetTexture(LFG_ICONS)
+			frame.HealersFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
+			frame.TanksFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
+			frame.DamagersFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
 			frame.HealersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 			frame.TanksFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			frame.DamagersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
@@ -185,7 +184,7 @@ function S:BlizzardMiscFrames()
 	S:HandleButton(_G.LFDRoleCheckPopupDeclineButton)
 
 	for _, roleButton in pairs(roleButtons) do
-		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, true)
+		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, nil, nil, true)
 		roleButton:DisableDrawLayer('OVERLAY')
 
 	--[=[ these use the ready check icons, which are more square

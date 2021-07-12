@@ -1,14 +1,13 @@
-local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local M = E:GetModule('Misc')
 local CH = E:GetModule('Chat')
 local LSM = E.Libs.LSM
 
-local format, wipe, unpack, pairs = format, wipe, unpack, pairs
+local format, wipe, pairs = format, wipe, pairs
 local strmatch, strlower, gmatch, gsub = strmatch, strlower, gmatch, gsub
 
 local Ambiguate = Ambiguate
 local CreateFrame = CreateFrame
-local GetInstanceInfo = GetInstanceInfo
 local RemoveExtraSpaces = RemoveExtraSpaces
 local PRIEST_COLOR = RAID_CLASS_COLORS.PRIEST
 local C_ChatBubbles_GetAllChatBubbles = C_ChatBubbles.GetAllChatBubbles
@@ -18,12 +17,15 @@ local messageToGUID = {}
 local messageToSender = {}
 
 function M:UpdateBubbleBorder()
-	local backdrop = self.backdrop
-	local str = backdrop and backdrop.String
+	local holder = self.holder
+	local str = holder and holder.String
 	if not str then return end
 
-	if E.private.general.chatBubbles == 'backdrop' then
-		backdrop.backdrop:SetBackdropBorderColor(str:GetTextColor())
+	local option = E.private.general.chatBubbles
+	if option == 'backdrop' then
+		holder:SetBackdropBorderColor(str:GetTextColor())
+	elseif option == 'backdrop_noborder' then
+		holder:SetBackdropBorderColor(0,0,0,0)
 	end
 
 	local name = self.Name and self.Name:GetText()
@@ -82,30 +84,21 @@ function M:AddChatBubbleName(chatBubble, guid, name)
 end
 
 local yOffset --Value set in M:LoadChatBubbles()
-function M:SkinBubble(frame, backdrop)
+function M:SkinBubble(frame, holder)
 	local bubbleFont = LSM:Fetch('font', E.private.general.chatBubbleFont)
-	if backdrop then
-		backdrop:DisableDrawLayer("BORDER")
+	if holder.String then
+		holder.String:FontTemplate(bubbleFont, E.private.general.chatBubbleFontSize, E.private.general.chatBubbleFontOutline)
 	end
 
-	if backdrop.String then
-		backdrop.String:FontTemplate(bubbleFont, E.private.general.chatBubbleFontSize, E.private.general.chatBubbleFontOutline)
-	end
+	local option = E.private.general.chatBubbles
+	if option == 'nobackdrop' then
+		holder:DisableDrawLayer('BORDER')
+	else
+		holder:SetTemplate('Transparent', nil, true)
 
-	if E.private.general.chatBubbles == 'backdrop' then
-		if not backdrop.template then
-			backdrop:CreateBackdrop('Transparent', nil, true)
+		if option == 'backdrop_noborder' then
+			holder.Center:SetInside(holder, 4, 4)
 		end
-	elseif E.private.general.chatBubbles == 'backdrop_noborder' then
-		if not backdrop.noBorder then
-			backdrop.noBorder = backdrop:CreateTexture(nil, 'ARTWORK')
-		end
-
-		backdrop.noBorder:SetInside(frame, 4, 4)
-		backdrop.noBorder:SetColorTexture(unpack(E.media.backdropfadecolor))
-	elseif E.private.general.chatBubbles == 'nobackdrop' then
-		backdrop:DisableDrawLayer("BORDER")
-		backdrop.Tail:Hide()
 	end
 
 	if not frame.Name then
@@ -117,9 +110,9 @@ function M:SkinBubble(frame, backdrop)
 		frame.Name = name
 	end
 
-	if not frame.backdrop then
-		frame.backdrop = backdrop
-		backdrop.Tail:Hide()
+	if not frame.holder then
+		frame.holder = holder
+		holder.Tail:Hide()
 
 		frame:HookScript('OnShow', M.UpdateBubbleBorder)
 		frame:SetFrameStrata('DIALOG') --Doesn't work currently in Legion due to a bug on Blizzards end
@@ -147,30 +140,28 @@ local function ChatBubble_OnUpdate(eventFrame, elapsed)
 	eventFrame.lastupdate = 0
 
 	for _, frame in pairs(C_ChatBubbles_GetAllChatBubbles()) do
-		local backdrop = frame:GetChildren(1)
-		if backdrop and not backdrop:IsForbidden() and not frame.isSkinnedElvUI then
-			M:SkinBubble(frame, backdrop)
+		local holder = frame:GetChildren()
+		if holder and not holder:IsForbidden() and not frame.isSkinnedElvUI then
+			M:SkinBubble(frame, holder)
 		end
 	end
 end
 
-function M:ToggleChatBubbleScript()
-	local _, instanceType = GetInstanceInfo()
-	if instanceType == 'none' and E.private.general.chatBubbles ~= 'disabled' then
+function M:LoadChatBubbles()
+	yOffset = (E.private.general.chatBubbles == 'backdrop' and 2) or (E.private.general.chatBubbles == 'backdrop_noborder' and -2) or 0
+
+	M.BubbleFrame = CreateFrame('Frame')
+	M.BubbleFrame:RegisterEvent('CHAT_MSG_SAY')
+	M.BubbleFrame:RegisterEvent('CHAT_MSG_YELL')
+	M.BubbleFrame:RegisterEvent('CHAT_MSG_MONSTER_SAY')
+	M.BubbleFrame:RegisterEvent('CHAT_MSG_MONSTER_YELL')
+	M.BubbleFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
+
+	if E.private.general.chatBubbles ~= 'disabled' then
 		M.BubbleFrame:SetScript('OnEvent', ChatBubble_OnEvent)
 		M.BubbleFrame:SetScript('OnUpdate', ChatBubble_OnUpdate)
 	else
 		M.BubbleFrame:SetScript('OnEvent', nil)
 		M.BubbleFrame:SetScript('OnUpdate', nil)
 	end
-end
-
-function M:LoadChatBubbles()
-	yOffset = (E.private.general.chatBubbles == 'backdrop' and 2) or (E.private.general.chatBubbles == 'backdrop_noborder' and -2) or 0
-	self.BubbleFrame = CreateFrame('Frame')
-	self.BubbleFrame:RegisterEvent('CHAT_MSG_SAY')
-	self.BubbleFrame:RegisterEvent('CHAT_MSG_YELL')
-	self.BubbleFrame:RegisterEvent('CHAT_MSG_MONSTER_SAY')
-	self.BubbleFrame:RegisterEvent('CHAT_MSG_MONSTER_YELL')
-	self.BubbleFrame:RegisterEvent('PLAYER_ENTERING_WORLD')
 end
