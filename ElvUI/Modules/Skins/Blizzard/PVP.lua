@@ -40,12 +40,20 @@ function S:Blizzard_PVPUI()
 		local bu = _G['PVPQueueFrameCategoryButton'..i]
 		bu.Ring:Kill()
 		bu.Background:Kill()
-		S:HandleButton(bu)
+		
+		bu:SetTemplate()
+		bu:StyleButton(nil, true)
 
+		bu.Icon:SetTexCoord(unpack(E.TexCoords))
+		bu.Icon:Point("LEFT", bu, "LEFT")
+		bu.Icon:SetDrawLayer("OVERLAY")
 		bu.Icon:Size(45)
 		bu.Icon:ClearAllPoints()
-		bu.Icon:Point('LEFT', 10, 0)
-		S:HandleIcon(bu.Icon, true)
+		bu.Icon:Point("LEFT", 10, 0)
+		bu.border = CreateFrame("Frame", nil, bu)
+		bu.border:SetTemplate("Default")
+		bu.border:SetOutside(bu.Icon)
+		bu.Icon:SetParent(bu.border)
 	end
 
 	local PVPQueueFrame = _G.PVPQueueFrame
@@ -81,7 +89,10 @@ function S:Blizzard_PVPUI()
 	for _, bonusButton in pairs({'RandomBGButton', 'Arena1Button', 'RandomEpicBGButton', 'BrawlButton', 'SpecialEventButton'}) do
 		local bu = BonusFrame[bonusButton]
 		local reward = bu.Reward
-		S:HandleButton(bu)
+		
+		bu:StripTextures()
+		bu:CreateBackdrop("Default")
+		bu:StyleButton(nil, true)
 		bu.SelectedTexture:SetInside()
 		bu.SelectedTexture:SetColorTexture(1, 1, 0, 0.1)
 

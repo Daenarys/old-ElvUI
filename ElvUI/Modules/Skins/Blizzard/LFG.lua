@@ -129,7 +129,7 @@ function S:LookingForGroupFrames()
 
 	_G.GroupFinderFrame.groupButton1.icon:SetTexture([[Interface\Icons\INV_Helmet_08]])
 	_G.GroupFinderFrame.groupButton2.icon:SetTexture([[Interface\LFGFrame\UI-LFR-PORTRAIT]])
-	_G.GroupFinderFrame.groupButton3.icon:SetTexture([[Interface\Icons\Icon_Scenarios]])
+	_G.GroupFinderFrame.groupButton3.icon:SetTexture([[Interface\Icons\Achievement_General_StayClassy]])
 
 	S:HandleButton(_G.LFGDungeonReadyDialogEnterDungeonButton)
 	S:HandleButton(_G.LFGDungeonReadyDialogLeaveQueueButton)
@@ -315,14 +315,24 @@ function S:LookingForGroupFrames()
 
 	for i = 1, 3 do
 		local bu = _G.GroupFinderFrame['groupButton'..i]
-		bu.ring:Kill()
-		bu.bg:Kill()
-		S:HandleButton(bu)
+		bu.ring:Hide()
+		bu.bg:SetTexture("")
+		bu.bg:SetAllPoints()
 
+		bu:SetTemplate()
+		bu:StyleButton()
+
+		bu.icon:SetTexCoord(unpack(E.TexCoords))
+		bu.icon:Point("LEFT", bu, "LEFT")
+		bu.icon:SetDrawLayer("OVERLAY")
 		bu.icon:Size(45)
 		bu.icon:ClearAllPoints()
-		bu.icon:Point('LEFT', 10, 0)
-		S:HandleIcon(bu.icon, true)
+		bu.icon:Point("LEFT", 10, 0)
+		bu.border = CreateFrame("Frame", nil, bu)
+		bu.border:SetTemplate('Default')
+		bu.border:SetOutside(bu.icon)
+		bu.icon:SetParent(bu.border)
+
 	end
 
 	for i = 1, 3 do
