@@ -4,11 +4,14 @@ local DT = E:GetModule('DataTexts')
 local _G = _G
 local ipairs, wipe = ipairs, wipe
 local format, next, strjoin = format, next, strjoin
+--WoW API / Variables
+local C_SpecializationInfo_GetAllSelectedPvpTalentIDs = C_SpecializationInfo.GetAllSelectedPvpTalentIDs
 local GetLootSpecialization = GetLootSpecialization
 local GetNumSpecializations = GetNumSpecializations
 local GetPvpTalentInfoByID = GetPvpTalentInfoByID
 local GetSpecialization = GetSpecialization
 local GetSpecializationInfo = GetSpecializationInfo
+local GetSpecializationInfoByID = GetSpecializationInfoByID
 local GetTalentInfo = GetTalentInfo
 local HideUIPanel = HideUIPanel
 local IsShiftKeyDown = IsShiftKeyDown
@@ -16,78 +19,91 @@ local SetLootSpecialization = SetLootSpecialization
 local SetSpecialization = SetSpecialization
 local ShowUIPanel = ShowUIPanel
 local LOOT = LOOT
+local LOOT_SPECIALIZATION_DEFAULT = LOOT_SPECIALIZATION_DEFAULT
+local SELECT_LOOT_SPECIALIZATION = SELECT_LOOT_SPECIALIZATION
 local TALENTS = TALENTS
 local PVP_TALENTS = PVP_TALENTS
-local SELECT_LOOT_SPECIALIZATION = SELECT_LOOT_SPECIALIZATION
-local LOOT_SPECIALIZATION_DEFAULT = LOOT_SPECIALIZATION_DEFAULT
-local C_SpecializationInfo_GetAllSelectedPvpTalentIDs = C_SpecializationInfo.GetAllSelectedPvpTalentIDs
 
 local displayString, lastPanel, active = ''
-local activeString = strjoin('', '|cff00FF00' , _G.ACTIVE_PETS, '|r')
-local inactiveString = strjoin('', '|cffFF0000', _G.FACTION_INACTIVE, '|r')
+local activeString = strjoin("", "|cff00FF00" , _G.ACTIVE_PETS, "|r")
+local inactiveString = strjoin("", "|cffFF0000", _G.FACTION_INACTIVE, "|r")
+local menuFrame = CreateFrame("Frame", "LootSpecializationDatatextClickMenu", E.UIParent, "UIDropDownMenuTemplate")
 local menuList = {
 	{ text = SELECT_LOOT_SPECIALIZATION, isTitle = true, notCheckable = true },
-	{ checked = function() return GetLootSpecialization() == 0 end, func = function() SetLootSpecialization(0) end },
+	{ notCheckable = true, func = function() SetLootSpecialization(0) end },
+	{ notCheckable = true },
+	{ notCheckable = true },
+	{ notCheckable = true },
+	{ notCheckable = true }
 }
-
 local specList = {
 	{ text = _G.SPECIALIZATION, isTitle = true, notCheckable = true },
+	{ notCheckable = true },
+	{ notCheckable = true },
+	{ notCheckable = true },
+	{ notCheckable = true }
 }
 
-local mainIcon = '|T%s:16:16:0:0:64:64:4:60:4:60|t'
 local function OnEvent(self)
 	lastPanel = self
 
-	if #menuList == 2 then
-		for index = 1, GetNumSpecializations() do
-			local id, name, _, icon = GetSpecializationInfo(index)
-			if id then
-				menuList[index + 2] = { text = name, checked = function() return GetLootSpecialization() == id end, func = function() SetLootSpecialization(id) end }
-				specList[index + 1] = { text = format('|T%s:14:14:0:0:64:64:4:60:4:60|t  %s', icon, name), checked = function() return GetSpecialization() == index end, func = function() SetSpecialization(index) end }
-			end
-		end
-	end
-
 	local specIndex = GetSpecialization()
-	local specialization = GetLootSpecialization()
-	local info = DT.SPECIALIZATION_CACHE[specIndex]
-
-	if not info then
+	if not specIndex then
 		self.text:SetText('N/A')
 		return
 	end
 
 	active = specIndex
 
-	local spec = format(mainIcon, info.icon)
+	local spec, loot, text = '', 'N/A', LOOT
+	local specialization = GetLootSpecialization()
 
-	if specialization == 0 or info.id == specialization then
-		self.text:SetFormattedText('%s %s', spec, info.name)
-	else
-		info = DT.SPECIALIZATION_CACHE[specialization]
-		self.text:SetFormattedText('%s: %s %s: %s', L["Spec"], spec, LOOT, format(mainIcon, info.icon))
+	local _, _, _, specTex = GetSpecializationInfo(specIndex)
+	if specTex then
+		spec = format('|T%s:14:14:0:0:64:64:4:60:4:60|t', specTex)
 	end
+
+	if specialization == 0 then
+		loot, text = spec, '|cFF54FF00'..text..'|r'
+	else
+		local _, _, _, texture = GetSpecializationInfoByID(specialization)
+		if texture then
+			loot = format('|T%s:14:14:0:0:64:64:4:60:4:60|t', texture)
+		end
+	end
+
+	self.text:SetFormattedText('%s: %s %s: %s', L["Spec"], spec, text, loot)
 end
 
-local listIcon = '|T%s:16:16:0:0:50:50:4:46:4:46|t'
 local function AddTexture(texture)
-	return texture and format(listIcon, texture) or ''
+	texture = texture and '|T'..texture..':16:16:0:0:50:50:4:46:4:46|t' or ''
+	return texture
 end
 
-local function OnEnter()
-	DT.tooltip:ClearLines()
+local function OnEnter(self)
+	DT:SetupTooltip(self)
 
-	for i, info in ipairs(DT.SPECIALIZATION_CACHE) do
-		DT.tooltip:AddLine(strjoin(' ', format(displayString, info.name), AddTexture(info.icon), (i == active and activeString or inactiveString)), 1, 1, 1)
+	for i = 1, GetNumSpecializations() do
+		local _, name, _, icon = GetSpecializationInfo(i)
+		if name then
+			DT.tooltip:AddLine(strjoin(" ", format(displayString, name), AddTexture(icon), (i == active and activeString or inactiveString)), 1, 1, 1)
+		end
 	end
 
 	DT.tooltip:AddLine(' ')
 
 	local specialization = GetLootSpecialization()
-	local sameSpec = specialization == 0 and GetSpecialization()
-	local specIndex = DT.SPECIALIZATION_CACHE[sameSpec or specialization]
-	if specIndex and specIndex.name then
-		DT.tooltip:AddLine(format('|cffFFFFFF%s:|r %s', SELECT_LOOT_SPECIALIZATION, sameSpec and format(LOOT_SPECIALIZATION_DEFAULT, specIndex.name) or specIndex.name))
+	if specialization == 0 then
+		local specIndex = GetSpecialization()
+		if specIndex then
+			local _, name = GetSpecializationInfo(specIndex)
+			DT.tooltip:AddLine(format('|cffFFFFFF%s:|r %s', SELECT_LOOT_SPECIALIZATION, format(LOOT_SPECIALIZATION_DEFAULT, name)))
+		end
+	else
+		local specID, name = GetSpecializationInfoByID(specialization)
+		if specID then
+			DT.tooltip:AddLine(format('|cffFFFFFF%s:|r %s', SELECT_LOOT_SPECIALIZATION, name))
+		end
 	end
 
 	DT.tooltip:AddLine(' ')
@@ -120,6 +136,7 @@ local function OnEnter()
 	DT.tooltip:AddLine(L["|cffFFFFFFLeft Click:|r Change Talent Specialization"])
 	DT.tooltip:AddLine(L["|cffFFFFFFShift + Left Click:|r Show Talent Specialization UI"])
 	DT.tooltip:AddLine(L["|cffFFFFFFRight Click:|r Change Loot Specialization"])
+
 	DT.tooltip:Show()
 end
 
@@ -127,9 +144,10 @@ local function OnClick(self, button)
 	local specIndex = GetSpecialization()
 	if not specIndex then return end
 
-	if button == 'LeftButton' then
+	if button == "LeftButton" then
+		DT.tooltip:Hide()
 		if not _G.PlayerTalentFrame then
-			_G.LoadAddOn('Blizzard_TalentUI')
+			_G.LoadAddOn("Blizzard_TalentUI")
 		end
 		if IsShiftKeyDown() then
 			if not _G.PlayerTalentFrame:IsShown() then
@@ -138,22 +156,42 @@ local function OnClick(self, button)
 				HideUIPanel(_G.PlayerTalentFrame)
 			end
 		else
-			DT:SetEasyMenuAnchor(DT.EasyMenu, self)
-			_G.EasyMenu(specList, DT.EasyMenu, nil, nil, nil, 'MENU')
+			for index = 1, 4 do
+				local id, name, _, texture = GetSpecializationInfo(index)
+				if ( id ) then
+					specList[index + 1].text = format('|T%s:14:14:0:0:64:64:4:60:4:60|t  %s', texture, name)
+					specList[index + 1].func = function() SetSpecialization(index) end
+				else
+					specList[index + 1] = nil
+				end
+			end
+			_G.EasyMenu(specList, menuFrame, "cursor", -15, -7, "MENU", 2)
 		end
 	else
+		DT.tooltip:Hide()
 		local _, specName = GetSpecializationInfo(specIndex)
 		menuList[2].text = format(LOOT_SPECIALIZATION_DEFAULT, specName)
 
-		DT:SetEasyMenuAnchor(DT.EasyMenu, self)
-		_G.EasyMenu(menuList, DT.EasyMenu, nil, nil, nil, 'MENU')
+		for index = 1, 4 do
+			local id, name = GetSpecializationInfo(index)
+			if ( id ) then
+				menuList[index + 2].text = name
+				menuList[index + 2].func = function() SetLootSpecialization(id) end
+			else
+				menuList[index + 2] = nil
+			end
+		end
+
+		_G.EasyMenu(menuList, menuFrame, "cursor", -15, -7, "MENU", 2)
 	end
 end
 
 local function ValueColorUpdate()
-	displayString = strjoin('', '|cffFFFFFF%s:|r ')
+	displayString = strjoin("", "|cffFFFFFF%s:|r ")
 
-	if lastPanel then OnEvent(lastPanel) end
+	if lastPanel ~= nil then
+		OnEvent(lastPanel)
+	end
 end
 E.valueColorUpdateFuncs[ValueColorUpdate] = true
 
