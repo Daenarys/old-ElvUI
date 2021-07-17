@@ -11,9 +11,37 @@ Changes so far:
 
 ______________________________________________________________
 
-### Version 12.35 [ ETA: 🍨 ]
+### Version 12.36 [ ETA: 🍨 ]
 
-**Nice:**  
+**Shiny:**  
+
+
+___
+### Version 12.35 [ July 17th 2021 ]
+
+**MegaShine:**  
+Added Nameplate support to show DBM or BigWigs auras on nameplates, stuff like Fixate. Settings under (Nameplates > General > General > Boss Mod Auras).  
+Added support to Style Filters to trigger based on Boss Mod Auras.  
+
+**Shiny:**  
+Improved preformance of Bags module.  
+Added Season 2 Dungeon Affix Debuffs and Blacklisted Drained debuff.  
+Added Slider for Reputation Databar alpha when not using custom colors.  
+Added Unit Class Color action to Style Filters.  
+
+**Fixed:**  
+Fixed Guild Bank search not fading the tabs.  
+Fixed Power Prediction overflowing sometimes.  
+Fixed Chat Bubble borders when using no border on non-thin borders.  
+Fixed Chat window could not be closed in combat.  
+Fixed rare Mover error linked to numpad keys.  
+Fixed Blanchy mount display on Unit and Aura.  
+
+**Updated:**  
+Increased range to scale Minimap icons more.  
+Updated the shading on Bag items when you search.  
+Updated the normal Bags skin code a bit, also some of the bank too.  
+Nameplate Auras now has a "Color by Type" option which will remove the debuff type border color (stealable and bad dispels will still be shown).  
 
 
 ___
@@ -141,7 +169,7 @@ ___
 
 ### Version 12.21 [ March 9th 2021 ]
 
-**Added:**
+**Added:**  
 PowerBar widget now has a mover  
 Click-Through option for AuraBars  
 Mouseover and Alpha setting for Voice Chat Panel  
@@ -180,7 +208,7 @@ ___
 
 ### Version 12.19 [ February 2nd 2021 ]
 
-**Added:**
+**Added:**  
 Bag Item Info option to change Anima text style  
 Sort by Index option for Unitframes  
 Classpower Shortvalue Tags  
@@ -334,7 +362,7 @@ ___
 **Hotfix:**  
 Petbar wasn't appearing with the Backdrop option selected.  
 
-**Also:**
+**Also:**  
 Top Aura options were reworked and settings for them were reset.  
 Added Custom Font options for Unitframe Castbars (Thanks @Caedis).  
 
@@ -2602,4 +2630,3 @@ Invalid tags on unitframes will now display the used tag text instead of [invali
 Added some spell IDs for ToS to RaidDebuffs filter. Probably not complete, community will need to provide feedback and fill in the blanks. (Merathilis)  
 Units in different phases will now always have their unitframe be displayed as out of range.  
 Various skin tweaks and fixes.  
-
