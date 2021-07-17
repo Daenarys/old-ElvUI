@@ -57,7 +57,7 @@ local function SkinBosses()
 	while bossID do
 		bossButton = _G['EncounterJournalBossButton'..bossIndex]
 		if bossButton and not bossButton.isSkinned then
-			HandleButton(bossButton)
+			S:HandleButton(bossButton)
 			bossButton.creature:ClearAllPoints()
 			bossButton.creature:Point('TOPLEFT', 1, -4)
 			bossButton.isSkinned = true
