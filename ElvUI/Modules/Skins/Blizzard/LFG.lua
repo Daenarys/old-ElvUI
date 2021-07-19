@@ -211,12 +211,9 @@ function S:LookingForGroupFrames()
 	}
 
 	for _, roleButton in pairs(RoleButtons1) do
-		local checkButton = roleButton.checkButton or roleButton.CheckButton
-		S:HandleCheckBox(checkButton)
-		checkButton.backdrop:SetFrameLevel(checkButton:GetFrameLevel())
-
-		roleButton:DisableDrawLayer('ARTWORK')
-		roleButton:DisableDrawLayer('OVERLAY')
+		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, true)
+		roleButton:DisableDrawLayer("ARTWORK")
+		roleButton:DisableDrawLayer("OVERLAY")
 
 		if not roleButton.background then
 			local isLeader = roleButton:GetName() ~= nil and roleButton:GetName():find('Leader') or false
