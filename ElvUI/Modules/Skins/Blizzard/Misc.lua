@@ -9,7 +9,7 @@ local unpack = unpack
 local hooksecurefunc = hooksecurefunc
 local CreateFrame = CreateFrame
 
-local LFG_ICONS = "Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS"
+local LFG_ICONS = [[Interface\LFGFrame\UI-LFG-ICONS-ROLEBACKGROUNDS]]
 local function SkinNavBarButtons(self)
 	if (self:GetParent():GetName() == 'EncounterJournal' and not E.private.skins.blizzard.encounterjournal) or (self:GetParent():GetName() == 'WorldMapFrame' and not E.private.skins.blizzard.worldmap) or (self:GetParent():GetName() == 'HelpFrameKnowledgebase' and not E.private.skins.blizzard.help) then
 		return
@@ -181,8 +181,19 @@ function S:BlizzardMiscFrames()
 	S:HandleButton(_G.LFDRoleCheckPopupDeclineButton)
 
 	for _, roleButton in pairs(roleButtons) do
-		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, true)
-		roleButton:DisableDrawLayer("OVERLAY")
+		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, nil, nil, true)
+		roleButton:DisableDrawLayer('OVERLAY')
+
+	--[=[ these use the ready check icons, which are more square
+		for i=1, roleButton:GetNumRegions() do
+			local region = select(i, roleButton:GetRegions())
+			if region and region:IsObjectType('Texture') then
+				if region:GetTexture() == [[Interface\LFGFrame\UI-LFG-ICON-ROLES]] then
+					region:SetTexture(E.Media.Textures.RoleIcons)
+				end
+			end
+		end
+	]=]
 	end
 
 	-- reskin popup buttons

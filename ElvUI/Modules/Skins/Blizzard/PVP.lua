@@ -19,7 +19,7 @@ local function HandleRoleChecks(button, ...)
 	button:DisableDrawLayer('OVERLAY')
 
 	button.bg = button:CreateTexture(nil, 'BACKGROUND', nil, -7)
-	button.bg:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+	button.bg:SetTexture([[Interface\LFGFrame\UI-LFG-ICONS-ROLEBACKGROUNDS]])
 	button.bg:SetTexCoord(...)
 	button.bg:Point('CENTER')
 	button.bg:Size(40, 40)
@@ -40,20 +40,12 @@ function S:Blizzard_PVPUI()
 		local bu = _G['PVPQueueFrameCategoryButton'..i]
 		bu.Ring:Kill()
 		bu.Background:Kill()
-		
-		bu:SetTemplate()
-		bu:StyleButton(nil, true)
+		S:HandleButton(bu)
 
-		bu.Icon:SetTexCoord(unpack(E.TexCoords))
-		bu.Icon:Point("LEFT", bu, "LEFT")
-		bu.Icon:SetDrawLayer("OVERLAY")
 		bu.Icon:Size(45)
 		bu.Icon:ClearAllPoints()
-		bu.Icon:Point("LEFT", 10, 0)
-		bu.border = CreateFrame("Frame", nil, bu)
-		bu.border:SetTemplate("Default")
-		bu.border:SetOutside(bu.Icon)
-		bu.Icon:SetParent(bu.border)
+		bu.Icon:Point('LEFT', 10, 0)
+		S:HandleIcon(bu.Icon, true)
 	end
 
 	local PVPQueueFrame = _G.PVPQueueFrame
@@ -89,10 +81,7 @@ function S:Blizzard_PVPUI()
 	for _, bonusButton in pairs({'RandomBGButton', 'Arena1Button', 'RandomEpicBGButton', 'BrawlButton', 'SpecialEventButton'}) do
 		local bu = BonusFrame[bonusButton]
 		local reward = bu.Reward
-		
-		bu:StripTextures()
-		bu:CreateBackdrop("Default")
-		bu:StyleButton(nil, true)
+		S:HandleButton(bu)
 		bu.SelectedTexture:SetInside()
 		bu.SelectedTexture:SetColorTexture(1, 1, 0, 0.1)
 
@@ -257,7 +246,7 @@ function S:PVPReadyDialog()
 	S:HandleButton(_G.PVPReadyDialogEnterBattleButton)
 	S:HandleButton(_G.PVPReadyDialogLeaveQueueButton)
 	S:HandleCloseButton(_G.PVPReadyDialogCloseButton)
-	_G.PVPReadyDialogRoleIcon.texture:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+	_G.PVPReadyDialogRoleIcon.texture:SetTexture(E.Media.Textures.RolesHQ)
 	_G.PVPReadyDialogRoleIcon.texture:SetAlpha(0.5)
 
 	hooksecurefunc('PVPReadyDialog_Display', function(s, _, _, _, queueType, _, role)
