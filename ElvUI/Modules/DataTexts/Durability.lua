@@ -1,10 +1,10 @@
-local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
+--Lua functions
 local _G = _G
-local select = select
-local wipe = wipe
-local format, pairs = format, pairs
+local format, strjoin, pairs = format, strjoin, pairs
+--WoW API / Variables
 local GetInventoryItemDurability = GetInventoryItemDurability
 local GetInventorySlotInfo = GetInventorySlotInfo
 local ToggleCharacter = ToggleCharacter

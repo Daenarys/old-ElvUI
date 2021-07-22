@@ -1,9 +1,9 @@
-local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
+local E, L, V, P, G = unpack(select(2, ...)); --Import: Engine, Locales, PrivateDB, ProfileDB, GlobalDB
 local DT = E:GetModule('DataTexts')
 
+--Lua functions
 local _G = _G
-local ipairs, wipe = ipairs, wipe
-local format, next, strjoin = format, next, strjoin
+local format, next, wipe, strjoin = format, next, wipe, strjoin
 --WoW API / Variables
 local C_SpecializationInfo_GetAllSelectedPvpTalentIDs = C_SpecializationInfo.GetAllSelectedPvpTalentIDs
 local GetLootSpecialization = GetLootSpecialization
@@ -118,18 +118,21 @@ local function OnEnter(self)
 		end
 	end
 
-	local pvpTalents = C_SpecializationInfo_GetAllSelectedPvpTalentIDs()
-	if next(pvpTalents) then
-		DT.tooltip:AddLine(' ')
-		DT.tooltip:AddLine(PVP_TALENTS, 0.69, 0.31, 0.31)
+	if E.mylevel >= _G.SHOW_PVP_TALENT_LEVEL then
+		local pvpTalents = C_SpecializationInfo_GetAllSelectedPvpTalentIDs()
 
-		for i, talentID in next, pvpTalents do
-			if i > 4 then break end
-			local _, name, icon, _, _, _, unlocked = GetPvpTalentInfoByID(talentID)
-			if name and unlocked then
-				DT.tooltip:AddLine(AddTexture(icon)..' '..name)
+		if #pvpTalents > 0 then
+			DT.tooltip:AddLine(' ')
+			DT.tooltip:AddLine(PVP_TALENTS, 0.69, 0.31, 0.31)
+			for _, talentID in next, pvpTalents do
+				local _, name, icon, _, _, _, unlocked = GetPvpTalentInfoByID(talentID)
+				if name and unlocked then
+					DT.tooltip:AddLine(AddTexture(icon)..' '..name)
+				end
 			end
 		end
+
+		wipe(pvpTalents)
 	end
 
 	DT.tooltip:AddLine(' ')
