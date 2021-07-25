@@ -181,6 +181,7 @@ L["Border Glow"] = true
 L["Border"] = true
 L["Borders"] = true
 L["Boss"] = true --No need to translate
+L["Boss Banner"] = true
 L["Both"] = true
 L["Bottom Left"] = true
 L["Bottom Panel"] = true

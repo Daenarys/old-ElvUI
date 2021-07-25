@@ -63,6 +63,8 @@ function B:Initialize()
 	B:PositionCaptureBar()
 	B:PositionVehicleFrame()
 	B:PositionTalkingHead()
+	B:PositionTalkingHead()
+	B:Handle_BossBanner()
 	B:HandleWidgets()
 
 	if not (E:IsAddOnEnabled('DugisGuideViewerZ') or E:IsAddOnEnabled('!KalielsTracker')) then

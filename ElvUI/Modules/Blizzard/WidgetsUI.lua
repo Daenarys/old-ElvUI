@@ -109,8 +109,8 @@ function B:HandleWidgets()
 	B:BuildWidgetHolder('MawBuffsBelowMinimapHolder', 'MawBuffsBelowMinimapMover', L["MawBuffsWidget"], _G.MawBuffsBelowMinimapFrame, 'TOP', _G.Minimap, 'BOTTOM', 0, -25, 250, 50, 'ALL,SOLO,WIDGETS')
 	B:BuildWidgetHolder('BelowMinimapContainerHolder', 'BelowMinimapContainerMover', L["BelowMinimapWidget"], _G.UIWidgetBelowMinimapContainerFrame, 'TOPRIGHT', _G.Minimap, 'BOTTOMRIGHT', 0, -16, 150, 30, 'ALL,SOLO,WIDGETS')
 
-	B:BuildWidgetHolder('EventToastHolder', 'EventToastMover', L["EventToastWidget"], _G.EventToastManagerFrame, 'TOP', E.UIParent, 'TOP', 0, -150, 200, 20, 'ALL,SOLO,WIDGETS')
-	B:BuildWidgetHolder('BossBannerHolder', 'BossBannerMover', L["BossBannerWidget"], _G.BossBanner, 'TOP', E.UIParent, 'TOP', 0, -125, 200, 20, 'ALL,SOLO,WIDGETS')
+	--B:BuildWidgetHolder('EventToastHolder', 'EventToastMover', L["EventToastWidget"], _G.EventToastManagerFrame, 'TOP', E.UIParent, 'TOP', 0, -120, 220, 20, 'ALL,SOLO,WIDGETS')
+	--B:BuildWidgetHolder('BossBannerHolder', 'BossBannerMover', L["BossBannerWidget"], _G.BossBanner, 'TOP', E.UIParent, 'TOP', 0, -125, 200, 20, 'ALL,SOLO,WIDGETS')
 
 	B:BuildWidgetHolder(nil, 'GMMover', L["GM Ticket Frame"], _G.TicketStatusFrame, 'TOPLEFT', E.UIParent, 'TOPLEFT', 250, -5, nil, nil, 'ALL,GENERAL')
 
