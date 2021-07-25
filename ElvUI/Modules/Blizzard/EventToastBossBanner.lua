@@ -13,14 +13,14 @@ local function Reanchor(frame, _, anchor)
 	end
 end
 
-function B:Handle_BossBanner()
+function B:Handle_EventToastBossBanner()
 	if not Holder then
-		Holder = CreateFrame('Frame', 'BossBannerHolder', E.UIParent)
+		Holder = CreateFrame('Frame', 'EventToastBossBannerHolder', E.UIParent)
 		Holder:Size(200, 20)
 		Holder:Point('TOP', E.UIParent, 'TOP', 0, -120)
 	end
 
-	E:CreateMover(Holder, 'BossBannerMover', L["Event Toast / Boss Banner"])
+	E:CreateMover(Holder, 'EventToastBossBannerMover', L["Event Toast / Boss Banner"])
 	
 	_G.EventToastManagerFrame:ClearAllPoints()
 	_G.EventToastManagerFrame:Point('TOP', Holder)
