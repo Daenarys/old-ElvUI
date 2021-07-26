@@ -114,7 +114,9 @@ local function SkinMissionFrame(frame, strip)
 		frame:StripTextures()
 	end
 
-	frame:SetTemplate('Transparent')
+	if not frame.backdrop then
+		frame:CreateBackdrop('Transparent')
+	end
 
 	frame.CloseButton:StripTextures()
 	S:HandleCloseButton(frame.CloseButton)
@@ -300,7 +302,7 @@ function S:Blizzard_GarrisonUI()
 	-- Landing page
 	local GarrisonLandingPage = _G.GarrisonLandingPage
 	local Report = GarrisonLandingPage.Report
-	GarrisonLandingPage:CreateBackdrop('Transparent')
+	GarrisonLandingPage:SetTemplate('Transparent')
 	S:HandleCloseButton(GarrisonLandingPage.CloseButton, GarrisonLandingPage.backdrop)
 	S:HandleTab(_G.GarrisonLandingPageTab1)
 	S:HandleTab(_G.GarrisonLandingPageTab2)
