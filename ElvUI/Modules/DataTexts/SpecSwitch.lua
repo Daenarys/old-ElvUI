@@ -117,29 +117,10 @@ local function OnEnter(self)
 			end
 		end
 	end
-
-	if E.mylevel >= _G.SHOW_PVP_TALENT_LEVEL then
-		local pvpTalents = C_SpecializationInfo_GetAllSelectedPvpTalentIDs()
-
-		if #pvpTalents > 0 then
-			DT.tooltip:AddLine(' ')
-			DT.tooltip:AddLine(PVP_TALENTS, 0.69, 0.31, 0.31)
-			for _, talentID in next, pvpTalents do
-				local _, name, icon, _, _, _, unlocked = GetPvpTalentInfoByID(talentID)
-				if name and unlocked then
-					DT.tooltip:AddLine(AddTexture(icon)..' '..name)
-				end
-			end
-		end
-
-		wipe(pvpTalents)
-	end
-
 	DT.tooltip:AddLine(' ')
 	DT.tooltip:AddLine(L["|cffFFFFFFLeft Click:|r Change Talent Specialization"])
 	DT.tooltip:AddLine(L["|cffFFFFFFShift + Left Click:|r Show Talent Specialization UI"])
 	DT.tooltip:AddLine(L["|cffFFFFFFRight Click:|r Change Loot Specialization"])
-
 	DT.tooltip:Show()
 end
 
