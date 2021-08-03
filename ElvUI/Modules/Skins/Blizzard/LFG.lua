@@ -135,7 +135,7 @@ function S:LookingForGroupFrames()
 	S:HandleButton(_G.LFGDungeonReadyDialogLeaveQueueButton)
 	S:HandleCloseButton(_G.LFGDungeonReadyDialogCloseButton)
 	_G.LFGDungeonReadyDialogBackground:Kill()
-	_G.LFGDungeonReadyDialogRoleIconTexture:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+	_G.LFGDungeonReadyDialogRoleIconTexture:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
 	_G.LFGDungeonReadyDialogRoleIconTexture:SetAlpha(0.5)
 	_G.LFGDungeonReadyDialog.filigree:SetAlpha(0)
 	_G.LFGDungeonReadyDialog.bottomArt:SetAlpha(0)
@@ -163,7 +163,7 @@ function S:LookingForGroupFrames()
 	hooksecurefunc('LFGDungeonReadyStatusIndividual_UpdateIcon', function(button)
 		local _, role = GetLFGProposalMember(button:GetID())
 
-		button.texture:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+		button.texture:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
 		button.texture:SetAlpha(0.6)
 
 		if role == 'DAMAGER' then
@@ -211,9 +211,12 @@ function S:LookingForGroupFrames()
 	}
 
 	for _, roleButton in pairs(RoleButtons1) do
-		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, true)
-		roleButton:DisableDrawLayer("ARTWORK")
-		roleButton:DisableDrawLayer("OVERLAY")
+		local checkButton = roleButton.checkButton or roleButton.CheckButton
+		S:HandleCheckBox(checkButton)
+		checkButton.backdrop:SetFrameLevel(checkButton:GetFrameLevel())
+
+		roleButton:DisableDrawLayer('ARTWORK')
+		roleButton:DisableDrawLayer('OVERLAY')
 
 		if not roleButton.background then
 			local isLeader = roleButton:GetName() ~= nil and roleButton:GetName():find('Leader') or false
@@ -221,7 +224,7 @@ function S:LookingForGroupFrames()
 				roleButton.background = roleButton:CreateTexture(nil, 'BACKGROUND')
 				roleButton.background:Size(80, 80)
 				roleButton.background:Point('CENTER')
-				roleButton.background:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+				roleButton.background:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
 				roleButton.background:SetAlpha(0.65)
 
 				local buttonName = roleButton:GetName() ~= nil and roleButton:GetName() or roleButton.role
@@ -523,7 +526,7 @@ function S:LookingForGroupFrames()
 	S:HandleButton(_G.LFGListInviteDialog.AcknowledgeButton)
 	S:HandleButton(_G.LFGListInviteDialog.AcceptButton)
 	S:HandleButton(_G.LFGListInviteDialog.DeclineButton)
-	_G.LFGListInviteDialog.RoleIcon:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
+	_G.LFGListInviteDialog.RoleIcon:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
 
 	hooksecurefunc('LFGListInviteDialog_Show', SetRoleIcon)
 

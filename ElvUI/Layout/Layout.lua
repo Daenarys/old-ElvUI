@@ -305,7 +305,7 @@ function LO:CreateChatPanels()
 	lchat:SetFrameLevel(300)
 	lchat:Size(100, 100)
 	lchat:Point('BOTTOMLEFT', E.UIParent, 4, 4)
-	lchat:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, true)
+	lchat:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, nil, true)
 	lchat.backdrop.callbackBackdropColor = CH.Panel_ColorUpdate
 	lchat.FadeObject = {finishedFunc = finishFade, finishedArg1 = lchat, finishedFuncKeep = true}
 	E:CreateMover(lchat, 'LeftChatMover', L["Left Chat"], nil, nil, LO.ResaveChatPosition, nil, nil, 'chat,general', true)
@@ -326,6 +326,7 @@ function LO:CreateChatPanels()
 
 	--Left Chat Toggle Button
 	local lchattb = CreateFrame('Button', 'LeftChatToggleButton', E.UIParent)
+	lchattb:SetNormalTexture(E.Media.Textures.ArrowUp)
 	lchattb:SetFrameStrata('BACKGROUND')
 	lchattb:SetFrameLevel(301)
 	lchattb:RegisterForClicks('LeftButtonUp', 'RightButtonUp')
@@ -338,12 +339,10 @@ function LO:CreateChatPanels()
 	end)
 
 	local lchattbtex = lchattb:GetNormalTexture()
-	lchattbtex = lchattb:CreateFontString(nil, 'OVERLAY')
-	lchattbtex:FontTemplate()
+	lchattbtex:SetRotation(E.Skins.ArrowRotation.left)
+	lchattbtex:ClearAllPoints()
 	lchattbtex:Point('CENTER')
-	lchattbtex:SetJustifyH('CENTER')
-	lchattbtex:SetText('<')
-
+	lchattbtex:Size(12)
 	lchattb.texture = lchattbtex
 	lchattb.OnEnter = ChatButton_OnEnter
 	lchattb.OnLeave = ChatButton_OnLeave
@@ -355,7 +354,7 @@ function LO:CreateChatPanels()
 	rchat:SetFrameLevel(300)
 	rchat:Size(100, 100)
 	rchat:Point('BOTTOMRIGHT', E.UIParent, -4, 4)
-	rchat:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, true)
+	rchat:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, nil, true)
 	rchat.backdrop.callbackBackdropColor = CH.Panel_ColorUpdate
 	rchat.FadeObject = {finishedFunc = finishFade, finishedArg1 = rchat, finishedFuncKeep = true}
 	E:CreateMover(rchat, 'RightChatMover', L["Right Chat"], nil, nil, LO.ResaveChatPosition, nil, nil, 'chat,general', true)
@@ -376,6 +375,7 @@ function LO:CreateChatPanels()
 
 	--Right Chat Toggle Button
 	local rchattb = CreateFrame('Button', 'RightChatToggleButton', E.UIParent)
+	rchattb:SetNormalTexture(E.Media.Textures.ArrowUp)
 	rchattb:RegisterForClicks('AnyUp')
 	rchattb:SetFrameStrata('BACKGROUND')
 	rchattb:SetFrameLevel(301)
@@ -388,11 +388,10 @@ function LO:CreateChatPanels()
 	end)
 
 	local rchattbtex = rchattb:GetNormalTexture()
-	rchattbtex = rchattb:CreateFontString(nil, 'OVERLAY')
-	rchattbtex:FontTemplate()
+	rchattbtex:SetRotation(E.Skins.ArrowRotation.right)
+	rchattbtex:ClearAllPoints()
 	rchattbtex:Point('CENTER')
-	rchattbtex:SetJustifyH('CENTER')
-	rchattbtex:SetText('>')
+	rchattbtex:Size(12)
 	rchattb.texture = rchattbtex
 	rchattb.parent = rchat
 

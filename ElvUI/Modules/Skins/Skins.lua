@@ -102,7 +102,7 @@ function S:HandlePortraitFrame(frame, createBackdrop)
 	end
 
 	if createBackdrop then
-		frame:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, true)
+		frame:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, nil, true)
 	else
 		frame:SetTemplate('Transparent')
 	end
@@ -328,7 +328,7 @@ function S:HandleButton(button, strip, isDecline, noStyle, createBackdrop, templ
 
 	if not noStyle then
 		if createBackdrop then
-			button:CreateBackdrop(template, not noGlossTex, nil, nil, nil, nil, true, frameLevel)
+			button:CreateBackdrop(template, not noGlossTex, nil, nil, nil, nil, nil, true, frameLevel)
 		else
 			button:SetTemplate(template, not noGlossTex)
 		end
@@ -357,7 +357,7 @@ do
 		local Thumb = GrabScrollBarElement(frame, 'ThumbTexture') or GrabScrollBarElement(frame, 'thumbTexture') or frame.GetThumbTexture and frame:GetThumbTexture()
 
 		frame:StripTextures()
-		frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, true)
+		frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, nil, true)
 		frame.backdrop:Point('TOPLEFT', ScrollUpButton or frame, ScrollUpButton and 'BOTTOMLEFT' or 'TOPLEFT', 0, 0)
 		frame.backdrop:Point('BOTTOMRIGHT', ScrollDownButton or frame, ScrollUpButton and 'TOPRIGHT' or 'BOTTOMRIGHT', 0, 0)
 
@@ -376,7 +376,7 @@ do
 
 		if Thumb and not Thumb.backdrop then
 			Thumb:SetTexture()
-			Thumb:CreateBackdrop(nil, true, true, nil, nil, nil, nil, frame:GetFrameLevel() + 1)
+			Thumb:CreateBackdrop(nil, true, true, nil, nil, nil, nil, nil, frame:GetFrameLevel() + 1)
 
 			if Thumb.backdrop then
 				if not thumbY then thumbY = 3 end
@@ -511,7 +511,7 @@ function S:HandleEditBox(frame, template)
 
 	if frame.backdrop then return end
 
-	frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, true)
+	frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, nil, true)
 	S:HandleBlizzardRegions(frame)
 
 	local EditBoxName = frame:GetName()
@@ -569,88 +569,90 @@ function S:HandleStatusBar(frame, color, template)
 	E:RegisterStatusBar(frame)
 end
 
-function S:HandleCheckBox(frame, noBackdrop, noReplaceTextures, forceSaturation)
-	assert(frame, 'does not exist.')
+do
+	local check = [[Interface\Buttons\UI-CheckBox-Check]]
+	local disabled = [[Interface\Buttons\UI-CheckBox-Check-Disabled]]
+	function S:HandleCheckBox(frame, noBackdrop, noReplaceTextures, frameLevel, template)
+		assert(frame, 'does not exist.')
 
-	if frame.isSkinned then return end
+		if frame.isSkinned then return end
 
-	frame:StripTextures()
-	frame.forceSaturation = forceSaturation
+		frame:StripTextures()
 
-	if noBackdrop then
-		frame:SetTemplate()
-		frame:Size(16)
-	else
-		frame:CreateBackdrop()
-		frame.backdrop:SetInside(nil, 4, 4)
-	end
-
-	if not noReplaceTextures then
-		if frame.SetCheckedTexture then
-			if E.private.skins.checkBoxSkin then
-				frame:SetCheckedTexture(E.Media.Textures.Melli)
-
-				local checkedTexture = frame:GetCheckedTexture()
-				checkedTexture:SetVertexColor(1, .82, 0, 0.8)
-				checkedTexture:SetInside(frame.backdrop)
-			else
-				frame:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
-
-				if noBackdrop then
-					frame:GetCheckedTexture():SetInside(nil, -4, -4)
-				end
-			end
+		if noBackdrop then
+			frame:Size(16)
+		else
+			frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, nil, frameLevel)
+			frame.backdrop:SetInside(nil, 4, 4)
 		end
 
-		if frame.SetDisabledTexture then
-			if E.private.skins.checkBoxSkin then
-				frame:SetDisabledTexture(E.Media.Textures.Melli)
-
-				local disabledTexture = frame:GetDisabledTexture()
-				disabledTexture:SetVertexColor(.6, .6, .6, .8)
-				disabledTexture:SetInside(frame.backdrop)
-			else
-				frame:SetDisabledTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled")
-
-				if noBackdrop then
-					frame:GetDisabledTexture():SetInside(nil, -4, -4)
-				end
-			end
-		end
-
-		frame:HookScript('OnDisable', function(checkbox)
-			if not checkbox.SetDisabledTexture then return; end
-			if checkbox:GetChecked() then
+		if not noReplaceTextures then
+			if frame.SetCheckedTexture then
 				if E.private.skins.checkBoxSkin then
-					checkbox:SetDisabledTexture(E.Media.Textures.Melli)
+					frame:SetCheckedTexture(E.Media.Textures.Melli)
+
+					local checkedTexture = frame:GetCheckedTexture()
+					checkedTexture:SetVertexColor(1, .82, 0, 0.8)
+					checkedTexture:SetInside(frame.backdrop)
 				else
-					checkbox:SetDisabledTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled")
+					frame:SetCheckedTexture(check)
+
+					if noBackdrop then
+						frame:GetCheckedTexture():SetInside(nil, -4, -4)
+					end
 				end
-			else
-				checkbox:SetDisabledTexture("")
 			end
-		end)
 
-		hooksecurefunc(frame, "SetNormalTexture", function(checkbox, texPath)
-			if texPath ~= "" then checkbox:SetNormalTexture("") end
-		end)
-		hooksecurefunc(frame, "SetPushedTexture", function(checkbox, texPath)
-			if texPath ~= "" then checkbox:SetPushedTexture("") end
-		end)
-		hooksecurefunc(frame, "SetHighlightTexture", function(checkbox, texPath)
-			if texPath ~= "" then checkbox:SetHighlightTexture("") end
-		end)
-		hooksecurefunc(frame, "SetCheckedTexture", function(checkbox, texPath)
-			if texPath == E.Media.Textures.Melli or texPath == "Interface\\Buttons\\UI-CheckBox-Check" then return end
-			if E.private.skins.checkBoxSkin then
-				checkbox:SetCheckedTexture(E.Media.Textures.Melli)
-			else
-				checkbox:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
+			if frame.SetDisabledTexture then
+				if E.private.skins.checkBoxSkin then
+					frame:SetDisabledTexture(E.Media.Textures.Melli)
+
+					local disabledTexture = frame:GetDisabledTexture()
+					disabledTexture:SetVertexColor(.6, .6, .6, .8)
+					disabledTexture:SetInside(frame.backdrop)
+				else
+					frame:SetDisabledTexture(disabled)
+
+					if noBackdrop then
+						frame:GetDisabledTexture():SetInside(nil, -4, -4)
+					end
+				end
 			end
-		end)
+
+			frame:HookScript('OnDisable', function(checkbox)
+				if not checkbox.SetDisabledTexture then return end
+				if checkbox:GetChecked() then
+					if E.private.skins.checkBoxSkin then
+						checkbox:SetDisabledTexture(E.Media.Textures.Melli)
+					else
+						checkbox:SetDisabledTexture(disabled)
+					end
+				else
+					checkbox:SetDisabledTexture('')
+				end
+			end)
+
+			hooksecurefunc(frame, 'SetNormalTexture', function(checkbox, texPath)
+				if texPath ~= '' then checkbox:SetNormalTexture('') end
+			end)
+			hooksecurefunc(frame, 'SetPushedTexture', function(checkbox, texPath)
+				if texPath ~= '' then checkbox:SetPushedTexture('') end
+			end)
+			hooksecurefunc(frame, 'SetHighlightTexture', function(checkbox, texPath)
+				if texPath ~= '' then checkbox:SetHighlightTexture('') end
+			end)
+			hooksecurefunc(frame, 'SetCheckedTexture', function(checkbox, texPath)
+				if texPath == E.Media.Textures.Melli or texPath == check then return end
+				if E.private.skins.checkBoxSkin then
+					checkbox:SetCheckedTexture(E.Media.Textures.Melli)
+				else
+					checkbox:SetCheckedTexture(check)
+				end
+			end)
+		end
+
+		frame.isSkinned = true
 	end
-
-	frame.isSkinned = true
 end
 
 function S:HandleRadioButton(Button)
@@ -720,7 +722,7 @@ function S:HandleItemButton(b, setInside)
 	local texture = icon and icon.GetTexture and icon:GetTexture()
 
 	b:StripTextures()
-	b:CreateBackdrop(nil, true, nil, nil, nil, nil, true)
+	b:CreateBackdrop(nil, true, nil, nil, nil, nil, nil, true)
 	b:StyleButton()
 
 	if icon then
@@ -779,7 +781,7 @@ function S:HandleSliderFrame(frame, template)
 	frame:SetThumbTexture(E.Media.Textures.Melli)
 
 	if not frame.backdrop then
-		frame:CreateBackdrop(template, nil, nil, nil, nil, nil, true)
+		frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, true)
 	end
 
 	local thumb = frame:GetThumbTexture()
