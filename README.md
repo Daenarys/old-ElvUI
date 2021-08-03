@@ -11,10 +11,34 @@ Changes so far:
 
 ______________________________________________________________
 
-### Version 12.38 [ ETA: 🍨 ]
+### Version 12.39 [ ETA: 🍨 ]
 
-**Shiny:**  
-Fixed Guild Control skin error  
+**Development:**  
+
+
+___
+### Version 12.38 [ August 2nd 2021 ]
+
+**Big Aura Update:**  
+UF/NP: Added Centered Support, Size Ratio, Stack Count offsets, Stackable Auras (Bolstering, Force of Nature, etc)  
+Nameplate: Added Rows, Attach To, Castbar Text and Time offsets, Smart Aura Position, and Blizzard Plate Font settings  
+Unitframe: Added GrowthX and GrowthY settings and also improved Smart Aura Position  
+*note: The GrowthX and GrowthY may need to be adjusted in your settings, if you are not using default*  
+
+**Updated:**  
+Added [classcolor:target] for class color of units [target]  
+Added Style Filter trigger for Faction and a [factioncolor] tag  
+Setup CVars will no longer reset Nameplate CVars if the Nameplate module is disabled  
+Bank and Bags Quality color setting wasnt working correctly  
+Reagent and Bank anchor was sometimes off  
+Unitframe Combat Icon offsets increased  
+*note: [classcolor] is the new [namecolor], however [namecolor] will continue to work*  
+
+**Skins:**  
+Trade, Communities, and Auction House skins updated  
+Chat Bubble Border and Guild Control skin issues fixed  
+Season PVP Reward Icon had checkmark behind it  
+Orderhall and Garrison mission skin fixes  
 
 ___
 ### Version 12.37 [ July 25th 2021 ]
@@ -62,4 +86,4 @@ Fixed Blanchy mount display on Unit and Aura.
 Increased range to scale Minimap icons more.  
 Updated the shading on Bag items when you search.  
 Updated the normal Bags skin code a bit, also some of the bank too.  
-Nameplate Auras now has a "Color by Type" option which will remove the debuff type border color (stealable and bad dispels will still be shown).  
+Nameplate Auras now has a "Color by Type" option which will remove the debuff type border color (stealable and bad dispels will still be shown).
