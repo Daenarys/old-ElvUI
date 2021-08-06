@@ -11,10 +11,25 @@ Changes so far:
 
 ______________________________________________________________
 
-### Version 12.39 [ ETA: 🍨 ]
+### Version 12.41 [ ETA: 🍨 ]
 
 **Development:**  
 
+
+___
+### Version 12.40 [ August 5th 2021 ]
+
+**Oops:**  
+Added API for Plugins (which all need to be updated) for recent Tags issue in 12.39  
+
+___
+### Version 12.39 [ August 5th 2021 ]
+
+**Changes:**  
+AuraBars not sorting correctly.  
+Reduced default Chat Bubble Font size down to 10.  
+Incompatibility issue with Clique and [mouseover] tags on Unitframes.  
+Nameplate Boss Mod Auras will now be trimmed when not using Keep Size Ratio.  
 
 ___
 ### Version 12.38 [ August 2nd 2021 ]
@@ -59,31 +74,4 @@ Blizzard Bags skin :)
 Event Toast has a mover now, which is new Level Up display.  
 Style Filters were messing with Nameplate Highlight texture.  
 Mythic Challenge icon wont be so faded.  
-Group Finder had wrong Premade Groups icon.  
-
-___
-### Version 12.35 [ July 17th 2021 ]
-
-**MegaShine:**  
-Added Nameplate support to show DBM or BigWigs auras on nameplates, stuff like Fixate. Settings under (Nameplates > General > General > Boss Mod Auras).  
-Added support to Style Filters to trigger based on Boss Mod Auras.  
-
-**Shiny:**  
-Improved preformance of Bags module.  
-Added Season 2 Dungeon Affix Debuffs and Blacklisted Drained debuff.  
-Added Slider for Reputation Databar alpha when not using custom colors.  
-Added Unit Class Color action to Style Filters.  
-
-**Fixed:**  
-Fixed Guild Bank search not fading the tabs.  
-Fixed Power Prediction overflowing sometimes.  
-Fixed Chat Bubble borders when using no border on non-thin borders.  
-Fixed Chat window could not be closed in combat.  
-Fixed rare Mover error linked to numpad keys.  
-Fixed Blanchy mount display on Unit and Aura.  
-
-**Updated:**  
-Increased range to scale Minimap icons more.  
-Updated the shading on Bag items when you search.  
-Updated the normal Bags skin code a bit, also some of the bank too.  
-Nameplate Auras now has a "Color by Type" option which will remove the debuff type border color (stealable and bad dispels will still be shown).
+Group Finder had wrong Premade Groups icon. 
