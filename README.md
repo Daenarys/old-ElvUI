@@ -9,11 +9,17 @@ Changes so far:
 - Reverted Chat Tab height and moved text position to the left
 
 ______________________________________________________________
-
-### Version 12.41 [ ETA: 🍨 ]
+### Version 12.42 [ ETA: 🍨 ]
 
 **Development:**  
 
+
+___
+### Version 12.41 [ August 6th 2021 ]
+
+**Changes:**  
+Chat Bubbles have their own Replace Font setting (General -> Cosmetic) and have their default font slightly increased to 12  
+Fixed another Plugin Tag issue from 12.39  
 
 ___
 ### Version 12.40 [ August 5th 2021 ]
@@ -53,24 +59,3 @@ Trade, Communities, and Auction House skins updated
 Chat Bubble Border and Guild Control skin issues fixed  
 Season PVP Reward Icon had checkmark behind it  
 Orderhall and Garrison mission skin fixes  
-
-___
-### Version 12.37 [ July 25th 2021 ]
-
-**Shiny:**  
-Added option to hide border colors for NP/UF Auras entirely (Borders by Type and Borders by Dispel)  
-Event Toast mover actually works (maybe, i think) :o  
-French Translation update (Thanks @xan2622)  
-
-___
-### Version 12.36 [ July 24th 2021 ]
-
-**Better:**  
-Bags :)  
-Blizzard Bags skin :)  
-
-**Good:**  
-Event Toast has a mover now, which is new Level Up display.  
-Style Filters were messing with Nameplate Highlight texture.  
-Mythic Challenge icon wont be so faded.  
-Group Finder had wrong Premade Groups icon. 
