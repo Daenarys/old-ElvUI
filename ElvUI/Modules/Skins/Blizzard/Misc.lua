@@ -2,23 +2,33 @@ local E, L, V, P, G = unpack(select(2, ...)) --Import: Engine, Locales, PrivateD
 local S = E:GetModule('Skins')
 
 local _G = _G
-local pairs = pairs
-local ipairs = ipairs
+local next = next
 local unpack = unpack
 
-local hooksecurefunc = hooksecurefunc
 local CreateFrame = CreateFrame
+local hooksecurefunc = hooksecurefunc
 
-local LFG_ICONS = 'Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS'
-local function SkinNavBarButtons(self)
-	if (self:GetParent():GetName() == 'EncounterJournal' and not E.private.skins.blizzard.encounterjournal) or (self:GetParent():GetName() == 'WorldMapFrame' and not E.private.skins.blizzard.worldmap) or (self:GetParent():GetName() == 'HelpFrameKnowledgebase' and not E.private.skins.blizzard.help) then
-		return
+local NavBarCheck = {
+	EncounterJournal = function()
+		return E.private.skins.blizzard.encounterjournal
+	end,
+	WorldMapFrame = function()
+		return E.private.skins.blizzard.worldmap
+	end,
+	HelpFrameKnowledgebase = function()
+		return E.private.skins.blizzard.help
 	end
+}
+
+local function SkinNavBarButtons(self)
+	local func = NavBarCheck[self:GetParent():GetName()]
+	if func and not func() then return end
 
 	local navButton = self.navList[#self.navList]
 	if navButton and not navButton.isSkinned then
 		S:HandleButton(navButton, true)
 		navButton:GetFontString():SetTextColor(1, 1, 1)
+
 		if navButton.MenuArrowButton then
 			navButton.MenuArrowButton:StripTextures()
 			if navButton.MenuArrowButton.Art then
@@ -29,7 +39,6 @@ local function SkinNavBarButtons(self)
 		end
 
 		navButton.xoffset = 1
-
 		navButton.isSkinned = true
 	end
 end
@@ -37,18 +46,7 @@ end
 function S:BlizzardMiscFrames()
 	if not (E.private.skins.blizzard.enable and E.private.skins.blizzard.misc) then return end
 
-	_G.QueueStatusFrame:StripTextures()
-
-	-- Blizzard frame we want to reskin
-	local skins = {
-		'AutoCompleteBox',
-		'ReadyCheckFrame',
-		'QueueStatusFrame',
-		'LFDReadyCheckPopup',
-	}
-
-	for i = 1, #skins do
-		local frame = _G[skins[i]]
+	for _, frame in next, { _G.AutoCompleteBox, _G.QueueStatusFrame } do
 		frame:StripTextures()
 		frame:SetTemplate('Transparent')
 	end
@@ -61,7 +59,7 @@ function S:BlizzardMiscFrames()
 		if isDPS then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
 				nextRoleIcon = nextRoleIcon + 1
 			end
@@ -69,7 +67,7 @@ function S:BlizzardMiscFrames()
 		if isHealer then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 				nextRoleIcon = nextRoleIcon + 1
 			end
@@ -77,7 +75,7 @@ function S:BlizzardMiscFrames()
 		if isTank then
 			local icon = entry['RoleIcon'..nextRoleIcon]
 			if icon then
-				icon:SetTexture(LFG_ICONS)
+				icon:SetTexture(E.Media.Textures.RolesHQ)
 				icon:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			end
 		end
@@ -85,18 +83,18 @@ function S:BlizzardMiscFrames()
 
 	hooksecurefunc('QueueStatusFrame_Update', function()
 		for frame in _G.QueueStatusFrame.statusEntriesPool:EnumerateActive() do
-			frame.HealersFound.Texture:SetTexture(LFG_ICONS)
-			frame.TanksFound.Texture:SetTexture(LFG_ICONS)
-			frame.DamagersFound.Texture:SetTexture(LFG_ICONS)
+			frame.HealersFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
+			frame.TanksFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
+			frame.DamagersFound.Texture:SetTexture(E.Media.Textures.RolesHQ)
 			frame.HealersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 			frame.TanksFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
 			frame.DamagersFound.Texture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
 		end
 	end)
 
+	-- reskin all esc/menu buttons
 	if not E:IsAddOnEnabled('ConsolePortUI_Menu') then
-		-- reskin all esc/menu buttons
-		for _, Button in pairs({_G.GameMenuFrame:GetChildren()}) do
+		for _, Button in next, { _G.GameMenuFrame:GetChildren() } do
 			if Button.IsObjectType and Button:IsObjectType('Button') then
 				S:HandleButton(Button)
 			end
@@ -140,13 +138,6 @@ function S:BlizzardMiscFrames()
 	end)
 
 	do
-		local ChatMenus = {
-			_G.ChatMenu,
-			_G.EmoteMenu,
-			_G.LanguageMenu,
-			_G.VoiceMacroMenu,
-		}
-
 		local menuBackdrop = function(s)
 			s:SetTemplate('Transparent')
 		end
@@ -158,7 +149,7 @@ function S:BlizzardMiscFrames()
 			s:Point('BOTTOMLEFT', _G.ChatFrame1, 'TOPLEFT', 0, 30)
 		end
 
-		for index, menu in ipairs(ChatMenus) do
+		for index, menu in next, { _G.ChatMenu, _G.EmoteMenu, _G.LanguageMenu, _G.VoiceMacroMenu } do
 			menu:StripTextures()
 
 			if index == 1 then -- ChatMenu
@@ -170,22 +161,20 @@ function S:BlizzardMiscFrames()
 	end
 
 	--LFD Role Picker frame
-	local roleButtons = {
-		_G.LFDRoleCheckPopupRoleButtonTank,
-		_G.LFDRoleCheckPopupRoleButtonDPS,
-		_G.LFDRoleCheckPopupRoleButtonHealer,
-	}
-
 	_G.LFDRoleCheckPopup:StripTextures()
 	_G.LFDRoleCheckPopup:SetTemplate('Transparent')
 	S:HandleButton(_G.LFDRoleCheckPopupAcceptButton)
 	S:HandleButton(_G.LFDRoleCheckPopupDeclineButton)
 
-	for _, roleButton in pairs(roleButtons) do
+	for _, roleButton in next, {
+		_G.LFDRoleCheckPopupRoleButtonTank,
+		_G.LFDRoleCheckPopupRoleButtonDPS,
+		_G.LFDRoleCheckPopupRoleButtonHealer
+	} do
 		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, nil, nil, true)
 		roleButton:DisableDrawLayer('OVERLAY')
 
-	--[=[ these use the ready check icons, which are more square
+		--[=[ these use the ready check icons, which are more square
 		for i=1, roleButton:GetNumRegions() do
 			local region = select(i, roleButton:GetRegions())
 			if region and region:IsObjectType('Texture') then
@@ -194,54 +183,58 @@ function S:BlizzardMiscFrames()
 				end
 			end
 		end
-	]=]
+		]=]
 	end
 
 	-- reskin popup buttons
 	for i = 1, 4 do
 		local StaticPopup = _G['StaticPopup'..i]
+		StaticPopup:StripTextures()
+		StaticPopup:SetTemplate('Transparent')
 		StaticPopup:HookScript('OnShow', function() -- UpdateRecapButton is created OnShow
 			if StaticPopup.UpdateRecapButton and (not StaticPopup.UpdateRecapButtonHooked) then
 				StaticPopup.UpdateRecapButtonHooked = true -- we should only hook this once
-				hooksecurefunc(_G['StaticPopup'..i], 'UpdateRecapButton', S.UpdateRecapButton)
+				hooksecurefunc(StaticPopup, 'UpdateRecapButton', S.UpdateRecapButton)
 			end
 		end)
-		StaticPopup:StripTextures()
-		StaticPopup:SetTemplate('Transparent')
 
 		for j = 1, 4 do
 			local button = StaticPopup['button'..j]
 			S:HandleButton(button)
 
-			button.Flash:Hide()
+			button:SetFrameLevel(button:GetFrameLevel() + 1)
 			button:CreateShadow(5)
 			button.shadow:SetAlpha(0)
 			button.shadow:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
-			button:SetFrameLevel(button:GetFrameLevel() + 1)
+			button.Flash:Hide()
 
 			local anim1, anim2 = button.PulseAnim:GetAnimations()
 			anim1:SetTarget(button.shadow)
 			anim2:SetTarget(button.shadow)
 		end
 
-		_G['StaticPopup'..i..'EditBox']:SetFrameLevel(_G['StaticPopup'..i..'EditBox']:GetFrameLevel()+1)
-		S:HandleEditBox(_G['StaticPopup'..i..'EditBox'])
+		local editbox = _G['StaticPopup'..i..'EditBox']
 		S:HandleEditBox(_G['StaticPopup'..i..'MoneyInputFrameGold'])
 		S:HandleEditBox(_G['StaticPopup'..i..'MoneyInputFrameSilver'])
 		S:HandleEditBox(_G['StaticPopup'..i..'MoneyInputFrameCopper'])
+		S:HandleEditBox(editbox)
+		editbox:SetFrameLevel(editbox:GetFrameLevel()+1)
+		editbox.backdrop:Point('TOPLEFT', -2, -4)
+		editbox.backdrop:Point('BOTTOMRIGHT', 2, 4)
 
-		_G['StaticPopup'..i..'EditBox'].backdrop:Point('TOPLEFT', -2, -4)
-		_G['StaticPopup'..i..'EditBox'].backdrop:Point('BOTTOMRIGHT', 2, 4)
 		_G['StaticPopup'..i..'ItemFrameNameFrame']:Kill()
-		_G['StaticPopup'..i..'ItemFrame']:SetTemplate()
-		_G['StaticPopup'..i..'ItemFrame']:StyleButton()
-		S:HandleIconBorder(_G['StaticPopup'..i..'ItemFrame'].IconBorder)
 		_G['StaticPopup'..i..'ItemFrameIconTexture']:SetTexCoord(unpack(E.TexCoords))
 		_G['StaticPopup'..i..'ItemFrameIconTexture']:SetInside()
 
-		local normTex = _G['StaticPopup'..i..'ItemFrame']:GetNormalTexture()
+		local itemFrame = _G['StaticPopup'..i..'ItemFrame']
+		itemFrame:SetTemplate()
+		itemFrame:StyleButton()
+		S:HandleIconBorder(itemFrame.IconBorder)
+
+		local normTex = itemFrame:GetNormalTexture()
 		if normTex then
 			normTex:SetTexture()
+
 			hooksecurefunc(normTex, 'SetTexture', function(s, tex)
 				if tex ~= nil then s:SetTexture() end
 			end)
@@ -358,14 +351,13 @@ function S:BlizzardMiscFrames()
 
 	local SideDressUpFrame = _G.SideDressUpFrame
 	S:HandleCloseButton(_G.SideDressUpFrameCloseButton)
-	S:HandleButton(_G.SideDressUpFrame.ResetButton)
-	_G.SideDressUpFrame.ResetButton:SetFrameLevel(_G.SideDressUpFrame.ResetButton:GetFrameLevel()+1)
+	S:HandleButton(SideDressUpFrame.ResetButton)
 	SideDressUpFrame:StripTextures()
+	SideDressUpFrame:SetTemplate('Transparent')
 	SideDressUpFrame.BGTopLeft:Hide()
 	SideDressUpFrame.BGBottomLeft:Hide()
-	SideDressUpFrame:SetTemplate('Transparent')
+	SideDressUpFrame.ResetButton:SetFrameLevel(SideDressUpFrame.ResetButton:GetFrameLevel()+1)
 
-	-- StackSplit
 	local StackSplitFrame = _G.StackSplitFrame
 	StackSplitFrame:StripTextures()
 	StackSplitFrame:SetTemplate('Transparent')
@@ -379,18 +371,17 @@ function S:BlizzardMiscFrames()
 	S:HandleButton(StackSplitFrame.OkayButton)
 	S:HandleButton(StackSplitFrame.CancelButton)
 
-	local buttons = {StackSplitFrame.LeftButton, StackSplitFrame.RightButton}
-	for _, btn in pairs(buttons) do
-		btn:Size(14, 18)
-		btn:ClearAllPoints()
+	for _, button in next, { StackSplitFrame.LeftButton, StackSplitFrame.RightButton } do
+		button:Size(14, 18)
+		button:ClearAllPoints()
 
-		if btn == StackSplitFrame.LeftButton then
-			btn:Point('LEFT', StackSplitFrame.bg1, 'LEFT', 4, 0)
+		if button == StackSplitFrame.LeftButton then
+			button:Point('LEFT', StackSplitFrame.bg1, 'LEFT', 4, 0)
 		else
-			btn:Point('RIGHT', StackSplitFrame.bg1, 'RIGHT', -4, 0)
+			button:Point('RIGHT', StackSplitFrame.bg1, 'RIGHT', -4, 0)
 		end
 
-		S:HandleNextPrevButton(btn, nil, nil, true)
+		S:HandleNextPrevButton(button, nil, nil, true)
 	end
 
 	--NavBar Buttons (Used in WorldMapFrame, EncounterJournal and HelpFrame)

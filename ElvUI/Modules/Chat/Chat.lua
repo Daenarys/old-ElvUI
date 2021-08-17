@@ -5,6 +5,7 @@ local Skins = E:GetModule('Skins')
 local LSM = E.Libs.LSM
 
 local _G = _G
+local issecurevariable = issecurevariable
 local gsub, strfind, gmatch, format = gsub, strfind, gmatch, format
 local ipairs, sort, wipe, date, time, difftime = ipairs, sort, wipe, date, time, difftime
 local pairs, unpack, select, pcall, next, tonumber, type = pairs, unpack, select, pcall, next, tonumber, type
@@ -570,6 +571,36 @@ do
 	end
 end
 
+do -- this fixes a taint when you push tab on editbox which blocks secure commands to the chat
+	local safe, list = {}, _G.hash_ChatTypeInfoList
+
+	function CH:ChatEdit_UntaintTabList()
+		for cmd, name in next, list do
+			if not issecurevariable(list, cmd) then
+				safe[cmd] = name
+				list[cmd] = nil
+			end
+		end
+	end
+
+	function CH:ChatEdit_PleaseRetaint()
+		for cmd, name in next, safe do
+			list[cmd] = name
+			safe[cmd] = nil
+		end
+	end
+
+	function CH:ChatEdit_PleaseUntaint(event)
+		if event == 'PLAYER_REGEN_DISABLED' then
+			if _G.ChatEdit_GetActiveWindow() then
+				CH:ChatEdit_UntaintTabList()
+			end
+		elseif InCombatLockdown() then
+			CH:ChatEdit_UntaintTabList()
+		end
+	end
+end
+
 function CH:EditBoxOnKeyDown(key)
 	--Work around broken SetAltArrowKeyMode API. Code from Prat and modified by Simpy
 	if (not self.historyLines) or #self.historyLines == 0 then
@@ -737,7 +768,7 @@ function CH:StyleChat(frame)
 	copyButton:EnableMouse(true)
 	copyButton:SetAlpha(0.35)
 	copyButton:Size(20, 22)
-	copyButton:Point('TOPRIGHT', 1, 3)
+	copyButton:Point('TOPRIGHT', 0, -4)
 	copyButton:SetFrameLevel(frame:GetFrameLevel() + 5)
 	frame.copyButton = copyButton
 
@@ -960,7 +991,7 @@ function CH:FCFDock_SelectWindow(_, chatFrame)
 end
 
 function CH:ChatEdit_ActivateChat(editbox)
-	if editbox and editbox.chatFrame then
+	if editbox.chatFrame then
 		CH:UpdateEditboxFont(editbox.chatFrame)
 	end
 end
@@ -1180,8 +1211,8 @@ function CH:PositionChat(chat)
 		local LOG_OFFSET = chat:GetID() == 2 and (_G.LeftChatTab:GetHeight() + 4) or 0
 
 		chat:ClearAllPoints()
-		chat:SetPoint('BOTTOMLEFT', _G.LeftChatPanel, 'BOTTOMLEFT', 3, 5)
-		chat:SetSize(CH.db.panelWidth - 11, CH.db.panelHeight - 37)
+		chat:SetPoint('BOTTOMLEFT', _G.LeftChatPanel, 'BOTTOMLEFT', 5, 5)
+		chat:SetSize(CH.db.panelWidth - 10, CH.db.panelHeight - BASE_OFFSET - LOG_OFFSET)
 
 		CH:ShowBackground(chat.Background, false)
 	elseif chat == CH.RightChatWindow then
@@ -2113,8 +2144,8 @@ function CH:SetupChat()
 
 	local chat = _G.GeneralDockManager.primary
 	_G.GeneralDockManager:ClearAllPoints()
-	_G.GeneralDockManager:Point('BOTTOMLEFT', chat, 'TOPLEFT', 1, 6)
-	_G.GeneralDockManager:Point('BOTTOMRIGHT', chat, 'TOPRIGHT', 1, 6)
+	_G.GeneralDockManager:Point('BOTTOMLEFT', chat, 'TOPLEFT', 0, 3)
+	_G.GeneralDockManager:Point('BOTTOMRIGHT', chat, 'TOPRIGHT', 0, 3)
 	_G.GeneralDockManager:Height(22)
 	_G.GeneralDockManagerScrollFrame:Height(22)
 	_G.GeneralDockManagerScrollFrameChild:Height(22)
@@ -2823,7 +2854,7 @@ function CH:HandleChatVoiceIcons()
 			button:ClearAllPoints()
 
 			if index == 1 then
-				button:Point('RIGHT', _G.GeneralDockManager, 'RIGHT', 7, 0)
+				button:Point('RIGHT', _G.GeneralDockManager, 'RIGHT', 2, 0)
 			else
 				button:Point('RIGHT', channelButtons[index-1], 'LEFT')
 			end
@@ -2985,7 +3016,7 @@ function CH:BuildCopyChatFrame()
 	editBox:SetMaxLetters(99999)
 	editBox:EnableMouse(true)
 	editBox:SetAutoFocus(false)
-	editBox:SetFontObject(_G.ChatFontNormal)
+	editBox:SetFontObject('ChatFontNormal')
 	editBox:Width(scrollArea:GetWidth())
 	editBox:Height(200)
 	editBox:SetScript('OnEscapePressed', function() _G.CopyChatFrame:Hide() end)
@@ -3323,6 +3354,8 @@ function CH:Initialize()
 	CH:SecureHook('FCF_SetChatWindowFontSize', 'SetChatFont')
 	CH:SecureHook('FCF_UnDockFrame', 'SnappingChanged')
 	CH:SecureHook('RedockChatWindows', 'ClearSnapping')
+	CH:SecureHook('ChatEdit_OnShow', 'ChatEdit_PleaseUntaint')
+	CH:SecureHook('ChatEdit_OnHide', 'ChatEdit_PleaseRetaint')
 	CH:SecureHook('UIDropDownMenu_AddButton')
 	CH:SecureHook('GetPlayerInfoByGUID')
 
@@ -3330,6 +3363,7 @@ function CH:Initialize()
 	CH:RegisterEvent('UPDATE_FLOATING_CHAT_WINDOWS', 'SetupChat')
 	CH:RegisterEvent('GROUP_ROSTER_UPDATE', 'CheckLFGRoles')
 	CH:RegisterEvent('SOCIAL_QUEUE_UPDATE', 'SocialQueueEvent')
+	CH:RegisterEvent('PLAYER_REGEN_DISABLED', 'ChatEdit_PleaseUntaint')
 	CH:RegisterEvent('PET_BATTLE_CLOSE')
 
 	if E.private.general.voiceOverlay then

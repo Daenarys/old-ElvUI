@@ -134,18 +134,28 @@ function S:LookingForGroupFrames()
 	S:HandleButton(_G.LFGDungeonReadyDialogEnterDungeonButton)
 	S:HandleButton(_G.LFGDungeonReadyDialogLeaveQueueButton)
 	S:HandleCloseButton(_G.LFGDungeonReadyDialogCloseButton)
-	_G.LFGDungeonReadyDialogBackground:Kill()
-	_G.LFGDungeonReadyDialogRoleIconTexture:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
+	_G.LFGDungeonReadyDialogEnterDungeonButton:ClearAllPoints()
+	_G.LFGDungeonReadyDialogEnterDungeonButton:Point('BOTTOMRIGHT', _G.LFGDungeonReadyDialog, 'BOTTOM', -10, 15)
+	_G.LFGDungeonReadyDialogLeaveQueueButton:ClearAllPoints()
+	_G.LFGDungeonReadyDialogLeaveQueueButton:Point('BOTTOMLEFT', _G.LFGDungeonReadyDialog, 'BOTTOM', 10, 15)
+	_G.LFGDungeonReadyDialogRoleIconTexture:SetTexture(E.Media.Textures.RolesHQ)
 	_G.LFGDungeonReadyDialogRoleIconTexture:SetAlpha(0.5)
-	_G.LFGDungeonReadyDialog.filigree:SetAlpha(0)
-	_G.LFGDungeonReadyDialog.bottomArt:SetAlpha(0)
 	_G.LFGDungeonReadyStatus:StripTextures()
 	_G.LFGDungeonReadyStatus:SetTemplate('Transparent')
+	_G.LFGDungeonReadyDialogBackground:SetInside()
+	_G.LFGDungeonReadyDialogBackground:Point('BOTTOMRIGHT', -E.Border, 50)
+
+	-- Artwork background (1)
+	_G.LFGDungeonReadyDialog:CreateBackdrop('Transparent', nil, nil, nil, nil, nil, nil, nil, true)
+	_G.LFGDungeonReadyDialog.backdrop:SetOutside(_G.LFGDungeonReadyDialogBackground)
+	_G.LFGDungeonReadyDialog.backdrop.Center:Hide()
 
 	hooksecurefunc('LFGDungeonReadyPopup_Update', function()
 		if _G.LFGDungeonReadyDialog:IsShown() then
-			_G.LFGDungeonReadyDialog:StripTextures()
-			_G.LFGDungeonReadyDialog:SetTemplate('Transparent')
+			_G.LFGDungeonReadyDialog:SetTemplate('Transparent') -- Frame background (2)
+			_G.LFGDungeonReadyDialog.bottomArt:Hide()
+			_G.LFGDungeonReadyDialog.filigree:Hide()
+			_G.LFGDungeonReadyDialog.Border:Hide()
 		end
 
 		if _G.LFGDungeonReadyDialogRoleIcon:IsShown() then
@@ -163,7 +173,7 @@ function S:LookingForGroupFrames()
 	hooksecurefunc('LFGDungeonReadyStatusIndividual_UpdateIcon', function(button)
 		local _, role = GetLFGProposalMember(button:GetID())
 
-		button.texture:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
+		button.texture:SetTexture(E.Media.Textures.RolesHQ)
 		button.texture:SetAlpha(0.6)
 
 		if role == 'DAMAGER' then
@@ -224,7 +234,7 @@ function S:LookingForGroupFrames()
 				roleButton.background = roleButton:CreateTexture(nil, 'BACKGROUND')
 				roleButton.background:Size(80, 80)
 				roleButton.background:Point('CENTER')
-				roleButton.background:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
+				roleButton.background:SetTexture(E.Media.Textures.RolesHQ)
 				roleButton.background:SetAlpha(0.65)
 
 				local buttonName = roleButton:GetName() ~= nil and roleButton:GetName() or roleButton.role
@@ -282,15 +292,21 @@ function S:LookingForGroupFrames()
 
 	_G.LFDQueueFrameRoleButtonLeader.leadIcon = _G.LFDQueueFrameRoleButtonLeader:CreateTexture(nil, 'BACKGROUND')
 	_G.LFDQueueFrameRoleButtonLeader.leadIcon:SetTexture(E.Media.Textures.LeaderHQ)
-	_G.LFDQueueFrameRoleButtonLeader.leadIcon:Point(_G.LFDQueueFrameRoleButtonLeader:GetNormalTexture():GetPoint(), -10, 5)
-	_G.LFDQueueFrameRoleButtonLeader.leadIcon:Size(50)
+	_G.LFDQueueFrameRoleButtonLeader.leadIcon:Point(_G.LFDQueueFrameRoleButtonLeader:GetNormalTexture():GetPoint(), -14, 16)
+	_G.LFDQueueFrameRoleButtonLeader.leadIcon:Size(80)
 	_G.LFDQueueFrameRoleButtonLeader.leadIcon:SetAlpha(0.6)
+	_G.LFDQueueFrameRoleButtonTankBackground:SetTexture(E.Media.Textures.RolesHQ)
+	_G.LFDQueueFrameRoleButtonHealerBackground:SetTexture(E.Media.Textures.RolesHQ)
+	_G.LFDQueueFrameRoleButtonDPSBackground:SetTexture(E.Media.Textures.RolesHQ)
 
 	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon = _G.RaidFinderQueueFrameRoleButtonLeader:CreateTexture(nil, 'BACKGROUND')
 	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:SetTexture(E.Media.Textures.LeaderHQ)
-	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:Point(_G.RaidFinderQueueFrameRoleButtonLeader:GetNormalTexture():GetPoint(), -10, 5)
-	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:Size(50)
+	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:Point(_G.RaidFinderQueueFrameRoleButtonLeader:GetNormalTexture():GetPoint(), -14, 16)
+	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:Size(80)
 	_G.RaidFinderQueueFrameRoleButtonLeader.leadIcon:SetAlpha(0.6)
+	_G.RaidFinderQueueFrameRoleButtonTankBackground:SetTexture(E.Media.Textures.RolesHQ)
+	_G.RaidFinderQueueFrameRoleButtonHealerBackground:SetTexture(E.Media.Textures.RolesHQ)
+	_G.RaidFinderQueueFrameRoleButtonDPSBackground:SetTexture(E.Media.Textures.RolesHQ)
 
 	hooksecurefunc('LFG_DisableRoleButton', function(button)
 		if button.checkButton:GetChecked() then
@@ -526,7 +542,7 @@ function S:LookingForGroupFrames()
 	S:HandleButton(_G.LFGListInviteDialog.AcknowledgeButton)
 	S:HandleButton(_G.LFGListInviteDialog.AcceptButton)
 	S:HandleButton(_G.LFGListInviteDialog.DeclineButton)
-	_G.LFGListInviteDialog.RoleIcon:SetTexture('Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS')
+	_G.LFGListInviteDialog.RoleIcon:SetTexture(E.Media.Textures.RolesHQ)
 
 	hooksecurefunc('LFGListInviteDialog_Show', SetRoleIcon)
 
@@ -668,7 +684,7 @@ function S:LookingForGroupFrames()
 				button.HighlightTexture:SetInside()
 
 				--Fix issue with labels not following changes to GameFontNormal as they should
-				button.Label:SetFontObject(_G.GameFontNormal)
+				button.Label:SetFontObject('GameFontNormal')
 				button.isSkinned = true
 			end
 
