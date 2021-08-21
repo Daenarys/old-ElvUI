@@ -572,17 +572,19 @@ end
 do
 	local check = [[Interface\Buttons\UI-CheckBox-Check]]
 	local disabled = [[Interface\Buttons\UI-CheckBox-Check-Disabled]]
-	function S:HandleCheckBox(frame, noBackdrop, noReplaceTextures, frameLevel, template)
+	function S:HandleCheckBox(frame, noBackdrop, noReplaceTextures, forceSaturation, frameLevel, template)
 		assert(frame, 'does not exist.')
 
 		if frame.isSkinned then return end
 
 		frame:StripTextures()
+		frame.forceSaturation = forceSaturation
 
 		if noBackdrop then
+			frame:SetTemplate()
 			frame:Size(16)
 		else
-			frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, nil, frameLevel)
+			frame:CreateBackdrop()
 			frame.backdrop:SetInside(nil, 4, 4)
 		end
 
