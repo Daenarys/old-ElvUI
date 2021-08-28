@@ -9,6 +9,26 @@ Changes so far:
 - Reverted Chat Tab height and moved text position to the left
 
 ______________________________________________________________
+### Version 12.45 [ ETA: 🍨 ]
+
+**Development:**  
+
+
+___
+### Version 12.44 [ August 27th 2021 ]
+
+**Dont Read This:**  
+Tags: Added [selectioncolor]  
+Fixed: Charged Combo points for Rogue Legendary  
+StyleFilter: Added triggers for Items, Slots, and Dispellable  
+Datatext: Combat Time will now prefer Encounter Time in instances, rather than own Combat Time  
+Unitframe: Fixed a rare oUF_RaidDebuff error (priority was missing)  
+Unitframe: Raid Pets are now optional with Smart Raid  
+Nameplate: Attempted fix for another GetPoint error  
+Skins: Fixed borders for Blizzard Interface Settings  
+Skins: Fixed Multisell frame on Auction House  
+
+___
 ### Version 12.43 [ August 17th 2021 ]
 
 **Changes:**  
