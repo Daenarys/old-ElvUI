@@ -5,8 +5,6 @@ Changes so far:
 
 - Reverted the Adventure Guide to the pre 2019 version which had the Overview, Loot, Abilties and Model tabs on the right side with a image and it had alot of parchment removed by default so it looks alot cleaner than the current ElvUI
 - Reverted the new Role Icons in Looking For Group, they were to big and ugly
-- Reverted Spec and Durability datatexts
-- Reverted Chat Tab height and moved text position to the left
 
 ______________________________________________________________
 ### Version 12.45 [ ETA: 🍨 ]
