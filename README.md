@@ -1,69 +1,44 @@
-# old-ElvUI
-Latest ElvUI for Shadowlands but with alot of changes reverted that made it look worse.
-
-Changes so far:
-
-- Reverted the Adventure Guide to the pre 2019 version which had the Overview, Loot, Abilties and Model tabs on the right side with a image and it had alot of parchment removed by default so it looks alot cleaner than the current ElvUI
-- Reverted the new Role Icons in Looking For Group, they were to big and ugly
-
-______________________________________________________________
-### Version 12.45 [ ETA: 🍨 ]
-
-**Development:**  
-
+### Version 12.48 [ ETA: 🍨 ]
+General: Updated RaidUtility  
+Locales: Updated russian translation (Credits Hollicsh)  
+Minimap: Fixes for minimap addon icons  
+Nameplates: Added back offset options for power  
+Nameplates: Fixed an issue which broke the "Add Filter" dropdown  
 
 ___
-### Version 12.44 [ August 27th 2021 ]
+### Version 12.47 [ November 4th 2021 ]
 
-**Dont Read This:**  
-Tags: Added [selectioncolor]  
-Fixed: Charged Combo points for Rogue Legendary  
-StyleFilter: Added triggers for Items, Slots, and Dispellable  
-Datatext: Combat Time will now prefer Encounter Time in instances, rather than own Combat Time  
-Unitframe: Fixed a rare oUF_RaidDebuff error (priority was missing)  
-Unitframe: Raid Pets are now optional with Smart Raid  
-Nameplate: Attempted fix for another GetPoint error  
-Skins: Fixed borders for Blizzard Interface Settings  
-Skins: Fixed Multisell frame on Auction House  
+Bags: Fixed Bag Bar bags not toggling bags  
+Bags: Fixed Bag Bar backdrop for only backpack option  
+Nameplates: Added aura sorting  
+Skins: Fixed groster skin error  
+Skins: Fixed itemupgrade button  
+Tooltips: Fixed item quality color  
+UnitFrames: Adjusted leader icon frame strata  
 
 ___
-### Version 12.43 [ August 17th 2021 ]
+### Version 12.46 [ November 2nd 2021 ]
 
-**Changes:**  
-Player Choice should be fixed in Torghat when in combat  
-Added a Mythic+ Best Run tooltip option  
+The text on Popups is now displaying correctly  
 
 ___
-### Version 12.42 [ August 16th 2021 ]
+### Version 12.45 [ November 2nd 2021 ]
 
-**Changes:**  
-Added a mover for Player Choice Toggle  
-Added Mind Soothe (Priest) to CCDebuffs  
-Fixed Right / Left anchor for Auras on Unitframes and Nameplates  
-Fixed an issue which prevented sending secure commands through Chat while in combat  
-Fixed an issue with Blizzard Effects (which caused them to be incorrect size and placed in wrong location)  
-Fixed Replaced Chat Bubble Font not working correctly  
-Fixed Static Player and Test Nameplate Scale  
-Fixed Aura Spacing on non-thin borders  
-Fixed Pushed texture on ActionBars  
-Updated various skins  
+**Note:**  
+Development is now on GitHub (was GitLab)  
+Unified our codebase to support Retail, TBC and Classic in one version  
 
-**Commands:**  
-Deleted /cleanguild as it was old and protected for some time  
-Renamed /enableblizzard to /eblizzard  
-Renamed /luaerror to /edebug  
-Renamed /resetui to /ereset  
-Renamed /moveui to /emove  
-
-___
-### Version 12.41 [ August 6th 2021 ]
-
-**Changes:**  
-Chat Bubbles have their own Replace Font setting (General -> Cosmetic) and have their default font slightly increased to 12  
-Fixed another Plugin Tag issue from 12.39  
-
-___
-### Version 12.40 [ August 5th 2021 ]
-
-**Oops:**  
-Added API for Plugins (which all need to be updated) for recent Tags issue in 12.39  
+**General:**  
+Added a button in bags and bank to stack items of the same type  
+Added an option to color tooltip border based on item quality  
+Added an option to hide chat in afk screensaver mode  
+Added support for the new Call of Duty in friends DataText  
+Added support to toggle single bags  
+Fixed a bug with the border color on top auras  
+Fixed Arena-Prep frames  
+Fixed AuraWatch sizeOffset Lua error  
+Fixed experience DataBar error on trial accounts  
+Fixed island expedition queue tooltip  
+Skin fixes and new skins for patch 9.1.5  
+Updated available tags and descriptions  
+Updated russian locale (Credits: Evgeniy)
