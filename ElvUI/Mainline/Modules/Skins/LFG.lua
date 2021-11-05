@@ -131,29 +131,30 @@ function S:LookingForGroupFrames()
 	_G.GroupFinderFrame.groupButton2.icon:SetTexture(133074) -- interface/icons/inv_helmet_06.blp
 	_G.GroupFinderFrame.groupButton3.icon:SetTexture(464820) -- interface/icons/achievement_general_stayclassy.blp
 
-	_G.LFGDungeonReadyDialogBackground:Kill()
 	S:HandleButton(_G.LFGDungeonReadyDialogEnterDungeonButton)
 	S:HandleButton(_G.LFGDungeonReadyDialogLeaveQueueButton)
 	S:HandleCloseButton(_G.LFGDungeonReadyDialogCloseButton)
-	_G.LFGDungeonReadyDialog:StripTextures()
-	_G.LFGDungeonReadyDialog:SetTemplate("Transparent")
-	_G.LFGDungeonReadyStatus:StripTextures()
-	_G.LFGDungeonReadyStatus:SetTemplate("Transparent")
+	_G.LFGDungeonReadyDialogBackground:Kill()
 	_G.LFGDungeonReadyDialogRoleIconTexture:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
 	_G.LFGDungeonReadyDialogRoleIconTexture:SetAlpha(0.5)
+	_G.LFGDungeonReadyDialog.filigree:SetAlpha(0)
+	_G.LFGDungeonReadyDialog.bottomArt:SetAlpha(0)
+	_G.LFGDungeonReadyStatus:StripTextures()
+	_G.LFGDungeonReadyStatus:SetTemplate('Transparent')
 
-	hooksecurefunc(_G.LFGDungeonReadyDialog, "SetBackdrop", function(frame, backdrop)
-		if backdrop ~= nil then frame:SetBackdrop(nil) end
-	end)
+	hooksecurefunc('LFGDungeonReadyPopup_Update', function()
+		if _G.LFGDungeonReadyDialog:IsShown() then
+			_G.LFGDungeonReadyDialog:StripTextures()
+			_G.LFGDungeonReadyDialog:SetTemplate('Transparent')
+		end
 
-	hooksecurefunc("LFGDungeonReadyPopup_Update", function()
-		local _, _, _, _, _, _, role = GetLFGProposal()
 		if _G.LFGDungeonReadyDialogRoleIcon:IsShown() then
-			if role == "DAMAGER" then
+			local _, _, _, _, _, _, role = GetLFGProposal()
+			if role == 'DAMAGER' then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
-			elseif role == "TANK" then
+			elseif role == 'TANK' then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
-			elseif role == "HEALER" then
+			elseif role == 'HEALER' then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 			end
 		end
