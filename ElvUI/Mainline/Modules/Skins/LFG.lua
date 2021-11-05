@@ -146,21 +146,14 @@ function S:LookingForGroupFrames()
 		if backdrop ~= nil then frame:SetBackdrop(nil) end
 	end)
 
-	hooksecurefunc('LFGDungeonReadyPopup_Update', function()
-		if _G.LFGDungeonReadyDialog:IsShown() then
-			_G.LFGDungeonReadyDialog:SetTemplate('Transparent') -- Frame background (2)
-			_G.LFGDungeonReadyDialog.bottomArt:Hide()
-			_G.LFGDungeonReadyDialog.filigree:Hide()
-			_G.LFGDungeonReadyDialog.Border:Hide()
-		end
-
+	hooksecurefunc("LFGDungeonReadyPopup_Update", function()
+		local _, _, _, _, _, _, role = GetLFGProposal()
 		if _G.LFGDungeonReadyDialogRoleIcon:IsShown() then
-			local _, _, _, _, _, _, role = GetLFGProposal()
-			if role == 'DAMAGER' then
+			if role == "DAMAGER" then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonDPS.background:GetTexCoord())
-			elseif role == 'TANK' then
+			elseif role == "TANK" then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonTank.background:GetTexCoord())
-			elseif role == 'HEALER' then
+			elseif role == "HEALER" then
 				_G.LFGDungeonReadyDialogRoleIconTexture:SetTexCoord(_G.LFDQueueFrameRoleButtonHealer.background:GetTexCoord())
 			end
 		end
