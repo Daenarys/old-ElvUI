@@ -1,19 +1,37 @@
 Latest ElvUI but with some custom changes, mostly reverts, of what I liked from old ElvUI versions.
-The current ElvUI devs are making changes that are completely unnecessary and imo are destroying the simplicity of ElvUI.
+The current ElvUI devs are making changes that are completely unnecessary and imo are making it worse.
 
 Changes so far:
 
 - Reverted the LFG role icons to the old ones and adjusted the checkbox position/backdrop
 - Reverted the Adventure Guide to the Legion version, parchment was enabled by default back then and the buttons on the right looked much cleaner. 
 - Reverted the SpecSwitch and Durability datatexts
+- Reverted Chat Tab stuff
+___
+### Version 12.50 [ ETA: 🍨 ]
+Add: Stuff
 
 ___
-### Version 12.48 [ ETA: 🍨 ]
-General: Updated RaidUtility  
-Locales: Updated russian translation (Credits Hollicsh)  
+### Version 12.49 [ November 9th 2021 ]
+
+ActionBars: Fixed ExtraActionButton hotkey text  
+Bags: Added Auto Toggle options to open bags with specific frames  
+Bags, DataTexts: Use Blizzards new coin icons  
+DataBars: Added an option to flip threat colors on tanks  
+General: Updated RaidUtility (added Main Tank and Main Assist buttons)  
+Locales: Updated russian translation (Thanks Hollicsh)  
 Minimap: Fixes for minimap addon icons  
 Nameplates: Added back offset options for power  
 Nameplates: Fixed an issue which broke the "Add Filter" dropdown  
+Skins: Fixed Covenant Follower tooltip skins  
+Tooltips: Fixed item quality color error with Tooltips skin disabled  
+UnitFrames: Fixed an issue in Boss frames options (Issue #44)  
+UnitFrames: Fixed Castbar Icon settings  
+
+___
+### Version 12.48 [ November 4th 2021 ]
+
+Options: Fixed Add Filter for Nameplate Debuffs
 
 ___
 ### Version 12.47 [ November 4th 2021 ]
