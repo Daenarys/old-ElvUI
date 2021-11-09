@@ -7,9 +7,17 @@ Changes so far:
 - Reverted the Adventure Guide to the Legion version, parchment was enabled by default back then and the buttons on the right looked much cleaner. 
 - Reverted the SpecSwitch and Durability datatexts
 - Reverted Chat Tab stuff
+
 ___
-### Version 12.50 [ ETA: 🍨 ]
+### Version 12.51 [ ETA: 🍨 ]
 Add: Stuff
+
+___
+### Version 12.50 [ November 9th 2021 ]
+
+World Map: Fixed issue which kept the Quest Model Scene shown  
+DataTexts: Fixed errors loading Avoidance and Ammo (they are for Classic)  
+Bags: Fix Main Bag icon when Bag Module is off (Bag skin)  
 
 ___
 ### Version 12.49 [ November 9th 2021 ]
@@ -19,11 +27,11 @@ Bags: Added Auto Toggle options to open bags with specific frames
 Bags, DataTexts: Use Blizzards new coin icons  
 DataBars: Added an option to flip threat colors on tanks  
 General: Updated RaidUtility (added Main Tank and Main Assist buttons)  
-Locales: Updated russian translation (Thanks Hollicsh)  
-Minimap: Fixes for minimap addon icons  
+Locales: Updated Russian translation (Thanks Hollicsh)  
+Minimap: Fixes for MiniMap AddOn icons  
 Nameplates: Added back offset options for power  
 Nameplates: Fixed an issue which broke the "Add Filter" dropdown  
-Skins: Fixed Covenant Follower tooltip skins  
+Skins: Fixed Covenant Follower Tooltip skins  
 Tooltips: Fixed item quality color error with Tooltips skin disabled  
 UnitFrames: Fixed an issue in Boss frames options (Issue #44)  
 UnitFrames: Fixed Castbar Icon settings  
@@ -69,4 +77,4 @@ Fixed experience DataBar error on trial accounts
 Fixed island expedition queue tooltip  
 Skin fixes and new skins for patch 9.1.5  
 Updated available tags and descriptions  
-Updated russian locale (Credits: Evgeniy)
+Updated russian locale (Credits: Evgeniy)  
