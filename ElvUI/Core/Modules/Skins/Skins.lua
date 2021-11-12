@@ -740,7 +740,6 @@ do
 		frame:StripTextures()
 
 		if noBackdrop then
-			frame:SetTemplate()
 			frame:Size(16)
 		else
 			frame:CreateBackdrop(template, nil, nil, nil, nil, nil, nil, nil, frameLevel)
