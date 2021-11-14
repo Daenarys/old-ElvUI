@@ -9,7 +9,27 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.53 [ ETA: 🍨 ]
+### Version 12.56 [ ETA: 🍨 ]
+
+___
+### Version 12.55 [ November 14th 2021 ]
+
+Tooltips: Fixed an error with item quality  
+
+___
+### Version 12.54 [ November 13th 2021 ]
+
+Bags: Fixed bank not updating correctly  
+Cooldown Text: Added a global option for rounding  
+Datatexts: Add Leech back in (oops)  
+Datatexts: Fix MovementSpeed not updating  
+Skins: Updated GM Ticket  
+Tooltips: Add option to display Item Count while using the Modifier for ids  
+
+___
+### Version 12.53 [ November 11th 2021 ]
+
+Fixed an error in DataTexts & DataBars  
 
 ___
 ### Version 12.52 [ November 11th 2021 ]
