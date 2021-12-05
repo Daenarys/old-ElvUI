@@ -9,8 +9,21 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.58 [ ETA: 🍨 ]
+### Version 12.59 [ ETA: 🍨 ]
 
+___
+### Version 12.58 [ December 4th 2021 ]
+
+ActionBars: Fixed layering issue (Keybinds on Pet Bar)  
+Bags: Added an option to hide Gold  
+Bags: Fixed an issue with mouseover tooltip  
+Chat: Added an option to hide channel names  
+DataTexts: Fixed Bags DataText  
+Minimap: Added option to scale the Minimap  
+Misc: Reworked LootRoll and added options  
+NamePlates: Updated StyleFilters config  
+Skins: Button Hover Glow in the Guild Bank fixed  
+UnitFrames: Added reverse fill option for Aura Bars  
 
 ___
 ### Version 12.57 [ November 22nd 2021 ]
@@ -74,4 +87,4 @@ ___
 
 World Map: Fixed issue which kept the Quest Model Scene shown  
 DataTexts: Fixed errors loading Avoidance and Ammo (they are for Classic)  
-Bags: Fix Main Bag icon when Bag Module is off (Bag skin)  
+Bags: Fix Main Bag icon when Bag Module is off (Bag skin) 
