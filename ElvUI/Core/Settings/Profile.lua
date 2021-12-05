@@ -78,7 +78,7 @@ P.general = {
 	valuecolor = {r = 23/255, g = 132/255, b = 209/255},
 	cropIcon = 2,
 	minimap = {
-		size = 175,
+		size = 176,
 		scale = 1,
 		locationText = 'MOUSEOVER',
 		locationFontSize = 12,
