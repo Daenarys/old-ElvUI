@@ -129,21 +129,11 @@ local function CastStart(self, real, unit, castGUID)
 	if oUF.isRetail and real == 'UNIT_SPELLCAST_START' and not castGUID then return end
 
 	local element = self.Castbar
-	local name, _, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID
-
-	if oUF.isTBC then
-		name, _, texture, startTime, endTime, isTradeSkill, castID, spellID = UnitCastingInfo(unit)
-	else
-		name, _, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = UnitCastingInfo(unit)
-	end
+	local name, _, texture, startTime, endTime, isTradeSkill, castID, notInterruptible, spellID = UnitCastingInfo(unit)
 
 	local event = 'UNIT_SPELLCAST_START'
 	if (not name) then
-		if oUF.isTBC then
-			name, _, texture, startTime, endTime, isTradeSkill, spellID = UnitChannelInfo(unit)
-		else
-			name, _, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID = UnitChannelInfo(unit)
-		end
+		name, _, texture, startTime, endTime, isTradeSkill, notInterruptible, spellID = UnitChannelInfo(unit)
 
 		event = 'UNIT_SPELLCAST_CHANNEL_START'
 	end
@@ -484,11 +474,6 @@ local function Enable(self, unit)
 
 		element:SetScript('OnUpdate', element.OnUpdate or onUpdate)
 
-		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
-			CastingBarFrame_SetUnit(CastingBarFrame, nil)
-			CastingBarFrame_SetUnit(PetCastingBarFrame, nil)
-		end
-
 		if(element:IsObjectType('StatusBar') and not element:GetStatusBarTexture()) then
 			element:SetStatusBarTexture([[Interface\TargetingFrame\UI-StatusBar]])
 		end
@@ -545,11 +530,6 @@ local function Disable(self)
 		end
 
 		element:SetScript('OnUpdate', nil)
-
-		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
-			CastingBarFrame_OnLoad(CastingBarFrame, 'player', true, false)
-			PetCastingBarFrame_OnLoad(PetCastingBarFrame)
-		end
 	end
 end
 

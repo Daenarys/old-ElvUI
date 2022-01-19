@@ -10,11 +10,9 @@ local assert, type, pcall, xpcall, next, print = assert, type, pcall, xpcall, ne
 local rawget, rawset, setmetatable = rawget, rawset, setmetatable
 
 local CreateFrame = CreateFrame
-local GetCVar = GetCVar
 local GetSpellInfo = GetSpellInfo
 local GetCVarBool = GetCVarBool
 local GetNumGroupMembers = GetNumGroupMembers
-local hooksecurefunc = hooksecurefunc
 local InCombatLockdown = InCombatLockdown
 local GetAddOnEnableState = GetAddOnEnableState
 local UnitFactionGroup = UnitFactionGroup
@@ -22,7 +20,6 @@ local DisableAddOn = DisableAddOn
 local IsInGroup = IsInGroup
 local IsInGuild = IsInGuild
 local IsInRaid = IsInRaid
-local SetCVar = SetCVar
 local ReloadUI = ReloadUI
 local UnitGUID = UnitGUID
 local GetBindingKey = GetBindingKey
@@ -64,6 +61,7 @@ E.myLocalizedRace, E.myrace = UnitRace('player')
 E.myname = UnitName('player')
 E.myrealm = GetRealmName()
 E.mynameRealm = format('%s - %s', E.myname, E.myrealm) -- contains spaces/dashes in realm (for profile keys)
+E.myspec = GetSpecialization()
 E.wowpatch, E.wowbuild = GetBuildInfo()
 E.wowbuild = tonumber(E.wowbuild)
 E.physicalWidth, E.physicalHeight = GetPhysicalScreenSize()
@@ -73,10 +71,6 @@ E.perfect = 768 / E.physicalHeight
 E.NewSign = [[|TInterface\OptionsFrame\UI-OptionsFrame-NewFeatureIcon:14:14|t]] -- not used by ElvUI yet, but plugins like BenikUI and MerathilisUI use it.
 E.TexturePath = [[Interface\AddOns\ElvUI\Media\Textures\]] -- for plugins?
 E.UserList = {}
-
-if E.Retail then
-	E.myspec = GetSpecialization()
-end
 
 -- oUF Defines
 E.oUF.Tags.Vars.E = E
@@ -96,20 +90,29 @@ E.TexCoords = {0, 1, 0, 1}
 E.FrameLocks = {}
 E.VehicleLocks = {}
 E.CreditsList = {}
-E.LockedCVars = {}
-E.IgnoredCVars = {}
-E.UpdatedCVars = {}
 E.ReverseTimer = {} -- Spells that we want to show the duration backwards (oUF_RaidDebuffs, ???)
 E.InversePoints = {
-	TOP = 'BOTTOM',
 	BOTTOM = 'TOP',
-	TOPLEFT = 'BOTTOMLEFT',
-	TOPRIGHT = 'BOTTOMRIGHT',
-	LEFT = 'RIGHT',
-	RIGHT = 'LEFT',
 	BOTTOMLEFT = 'TOPLEFT',
 	BOTTOMRIGHT = 'TOPRIGHT',
-	CENTER = 'CENTER'
+	CENTER = 'CENTER',
+	LEFT = 'RIGHT',
+	RIGHT = 'LEFT',
+	TOP = 'BOTTOM',
+	TOPLEFT = 'BOTTOMLEFT',
+	TOPRIGHT = 'BOTTOMRIGHT'
+}
+
+E.InverseAnchors = {
+	BOTTOM = 'TOP',
+	BOTTOMLEFT = 'TOPRIGHT',
+	BOTTOMRIGHT = 'TOPLEFT',
+	CENTER = 'CENTER',
+	LEFT = 'RIGHT',
+	RIGHT = 'LEFT',
+	TOP = 'BOTTOM',
+	TOPLEFT = 'BOTTOMRIGHT',
+	TOPRIGHT = 'BOTTOMLEFT'
 }
 
 E.DispelClasses = {
@@ -285,26 +288,29 @@ end
 function E:UpdateMedia()
 	if not E.db.general or not E.private.general then return end --Prevent rare nil value errors
 
-	--Fonts
+	-- Fonts
 	E.media.normFont = LSM:Fetch('font', E.db.general.font)
 	E.media.combatFont = LSM:Fetch('font', E.private.general.dmgfont)
 
-	--Textures
+	-- Textures
 	E.media.blankTex = LSM:Fetch('background', 'ElvUI Blank')
 	E.media.normTex = LSM:Fetch('statusbar', E.private.general.normTex)
 	E.media.glossTex = LSM:Fetch('statusbar', E.private.general.glossTex)
 
-	--Colors
+	-- Colors
 	E.media.bordercolor = E:SetColorTable(E.media.bordercolor, E:UpdateClassColor(E.db.general.bordercolor))
 	E.media.unitframeBorderColor = E:SetColorTable(E.media.unitframeBorderColor, E:UpdateClassColor(E.db.unitframe.colors.borderColor))
 	E.media.backdropcolor = E:SetColorTable(E.media.backdropcolor, E:UpdateClassColor(E.db.general.backdropcolor))
 	E.media.backdropfadecolor = E:SetColorTable(E.media.backdropfadecolor, E:UpdateClassColor(E.db.general.backdropfadecolor))
 
+	-- Custom Glow Color
+	E.media.customGlowColor = E:SetColorTable(E.media.customGlowColor, E:UpdateClassColor(E.db.general.customGlow.color))
+
 	local value = E:UpdateClassColor(E.db.general.valuecolor)
 	E.media.rgbvaluecolor = E:SetColorTable(E.media.rgbvaluecolor, value)
 	E.media.hexvaluecolor = E:RGBToHex(value.r, value.g, value.b)
 
-	--Chat Tab Selector Color
+	-- Chat Tab Selector Color
 	E:UpdateClassColor(E.db.chat.tabSelectorColor)
 
 	-- Chat Panel Background Texture
@@ -366,42 +372,6 @@ do	--Update font/texture paths when they are registered by the addon providing t
 	--We use a wrapper to avoid errors in :UpdateMedia because 'self' is passed to the function with a value other than ElvUI.
 	local function LSMCallback() E:UpdateMedia() end
 	LSM.RegisterCallback(E, 'LibSharedMedia_Registered', LSMCallback)
-end
-
-do
-	local function CVAR_UPDATE(name, value)
-		if not E.IgnoredCVars[name] then
-			local locked = E.LockedCVars[name]
-			if locked ~= nil and locked ~= value then
-				if InCombatLockdown() then
-					E.CVarUpdate = true
-					return
-				end
-
-				SetCVar(name, locked)
-			end
-
-			local func = E.UpdatedCVars[name]
-			if func then func(value) end
-		end
-	end
-
-	hooksecurefunc('SetCVar', CVAR_UPDATE)
-	function E:LockCVar(name, value)
-		if GetCVar(name) ~= value then
-			SetCVar(name, value)
-		end
-
-		E.LockedCVars[name] = value
-	end
-
-	function E:UpdatedCVar(name, func)
-		E.UpdatedCVars[name] = func
-	end
-
-	function E:IgnoreCVar(name, ignore)
-		E.IgnoredCVars[name] = (not not ignore) -- cast to bool, just in case
-	end
 end
 
 function E:ValueFuncCall()
@@ -585,7 +555,18 @@ do
 			'Kui_Nameplates',
 			'Plater',
 			'Aloft'
-		}
+		},
+		Minimap = {
+			info = {
+				enabled = function()
+					local db = E.private.general.minimap.enable and _G.LeaPlusDB
+					return db and db.MinimapMod == 'On'
+				end,
+				accept = function() E.private.general.minimap.enable = false; ReloadUI() end,
+				name = 'ElvUI Minimap',
+			},
+			'Leatrix_Plus'
+		},
 	}
 
 	E.INCOMPATIBLE_ADDONS = ADDONS -- let addons have the ability to alter this list to trigger our popup if they want
@@ -1256,6 +1237,11 @@ function E:DBConvertSL()
 		E.private.skins.cleanBossButton = nil
 	end
 
+	if E.global.nameplate then
+		E:CopyTable(E.global.nameplates, E.global.nameplate)
+		E.global.nameplate = nil
+	end
+
 	if E.global.unitframe.DebuffHighlightColors then
 		E:CopyTable(E.global.unitframe.AuraHighlightColors, E.global.unitframe.DebuffHighlightColors)
 		E.global.unitframe.DebuffHighlightColors = nil
@@ -1807,10 +1793,6 @@ function E:DBConversions()
 	end
 
 	-- development converts
-	if E.global.nameplate then
-		E:CopyTable(E.global.nameplates, E.global.nameplate)
-		E.global.nameplate = nil
-	end
 
 	-- always convert
 	if not ElvCharacterDB.ConvertKeybindings then
@@ -1930,11 +1912,6 @@ function E:Initialize()
 
 	if GetCVarBool('scriptProfile') then
 		E:StaticPopup_Show('SCRIPT_PROFILE')
-	end
-
-	-- Blizzard will set this value to int(60/CVar cameraDistanceMax)+1 at logout if it is manually set higher than that
-	if not E.Retail and E.db.general.lockCameraDistanceMax then
-		E:LockCVar('cameraDistanceMaxZoomFactor', E.db.general.cameraDistanceMax)
 	end
 
 	if E.db.general.loginmessage then

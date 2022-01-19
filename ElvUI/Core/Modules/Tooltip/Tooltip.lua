@@ -91,7 +91,7 @@ local targetList, TAPPED_COLOR = {}, { r=0.6, g=0.6, b=0.6 }
 local AFK_LABEL = ' |cffFFFFFF[|r|cffFF0000'..L["AFK"]..'|r|cffFFFFFF]|r'
 local DND_LABEL = ' |cffFFFFFF[|r|cffFFFF00'..L["DND"]..'|r|cffFFFFFF]|r'
 local genderTable = { _G.UNKNOWN..' ', _G.MALE..' ', _G.FEMALE..' ' }
-local blanchyFix = '|n%s+|n' -- thanks blizz -x- lol
+local blanchyFix = '|n%s*|n' -- thanks blizz -x- lol
 local whiteRGB = { r = 1, g = 1, b = 1 }
 
 function TT:IsModKeyDown(db)
@@ -886,13 +886,6 @@ function TT:SetBackpackToken(tt, id)
 			tt:AddLine(format(IDLine, _G.ID, info.currencyTypesID))
 			tt:Show()
 		end
-	end
-end
-
-function TT:RepositionBNET(frame, _, anchor)
-	if anchor ~= _G.BNETMover then
-		frame:ClearAllPoints()
-		frame:Point(_G.BNETMover.anchorPoint or 'TOPLEFT', _G.BNETMover, _G.BNETMover.anchorPoint or 'TOPLEFT')
 	end
 end
 

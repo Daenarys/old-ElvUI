@@ -1,6 +1,6 @@
 local E, L, V, P, G = unpack(ElvUI)
 local S = E:GetModule('Skins')
-local LBG = E.Libs.ButtonGlow
+local LCG = E.Libs.CustomGlow
 
 local _G = _G
 local unpack, ipairs, pairs, select = unpack, ipairs, pairs, select
