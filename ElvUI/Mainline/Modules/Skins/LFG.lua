@@ -3,11 +3,12 @@ local S = E:GetModule('Skins')
 local LCG = E.Libs.CustomGlow
 
 local _G = _G
-local unpack, ipairs, pairs, select = unpack, ipairs, pairs, select
-local min, strlower = min, strlower
+local unpack, ipairs, pairs = unpack, ipairs, pairs
+local min, strlower, select = min, strlower, select
 
-local hooksecurefunc = hooksecurefunc
+local GetItemInfo = GetItemInfo
 local GetLFGProposal = GetLFGProposal
+local UnitIsGroupLeader = UnitIsGroupLeader
 local GetLFGProposalMember = GetLFGProposalMember
 local GetBackgroundTexCoordsForRole = GetBackgroundTexCoordsForRole
 local C_ChallengeMode_GetAffixInfo = C_ChallengeMode.GetAffixInfo
@@ -17,12 +18,14 @@ local C_LFGList_GetAvailableRoles = C_LFGList.GetAvailableRoles
 local C_MythicPlus_GetCurrentAffixes = C_MythicPlus.GetCurrentAffixes
 local C_ChallengeMode_GetSlottedKeystoneInfo = C_ChallengeMode.GetSlottedKeystoneInfo
 local C_ChallengeMode_GetMapUIInfo = C_ChallengeMode.GetMapUIInfo
+local LE_PARTY_CATEGORY_HOME = LE_PARTY_CATEGORY_HOME
+local hooksecurefunc = hooksecurefunc
 
 local function LFDQueueFrameRoleButtonIconOnShow(self)
-	LBG.ShowOverlayGlow(self:GetParent().checkButton)
+	LCG.ShowOverlayGlow(self:GetParent().checkButton)
 end
 local function LFDQueueFrameRoleButtonIconOnHide(self)
-	LBG.HideOverlayGlow(self:GetParent().checkButton)
+	LCG.HideOverlayGlow(self:GetParent().checkButton)
 end
 
 local function HandleGoldIcon(button)
