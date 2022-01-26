@@ -3016,7 +3016,7 @@ function CH:HandleChatVoiceIcons()
 			button:ClearAllPoints()
 
 			if index == 1 then
-				button:Point('RIGHT', _G.GeneralDockManager, 'RIGHT', 2, 0)
+				button:Point('RIGHT', _G.GeneralDockManager, 'RIGHT', 7, 0)
 			else
 				button:Point('RIGHT', channelButtons[index-1], 'LEFT')
 			end
