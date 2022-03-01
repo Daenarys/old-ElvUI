@@ -210,7 +210,7 @@ StyleFitlers.triggers = ACH:Group(L["Triggers"], nil, 5, nil, nil, nil, function
 -- UpdateBossModAuras needed here in get to update the list once every time you load the config with a selected filter.
 StyleFitlers.triggers.args.enable = ACH:Toggle(L["Enable"], nil, 0, nil, nil, nil, function() UpdateBossModAuras(true) local profileTriggers = GetFilter(true, true) return profileTriggers and profileTriggers.enable end, function(_, value) E.db.nameplates = E.db.nameplates or {} E.db.nameplates.filters = E.db.nameplates.filters or {} E.db.nameplates.filters[C.StyleFilterSelected] = E.db.nameplates.filters[C.StyleFilterSelected] or {} local profileFilter = GetFilter(nil, true) if not profileFilter.triggers then profileFilter.triggers = {} end profileFilter.triggers.enable = value NP:ConfigureAll() end)
 StyleFitlers.triggers.args.priority = ACH:Range(L["Filter Priority"], L["Lower numbers mean a higher priority. Filters are processed in order from 1 to 100."], 1, { min = 1, max = 100, step = 1 }, nil, function() local triggers = GetFilter(true) return triggers.priority or 1 end, function(_, value) local triggers = GetFilter(true) triggers.priority = value NP:ConfigureAll() end, DisabledFilter)
-StyleFitlers.triggers.args.resetFilter = ACH:Execute(L["Clear Filter"], L["Return filter to its default state."], 2, function() E.global.nameplates.filters[C.StyleFilterSelected] = G.nameplates.filters[C.StyleFilterSelected] and E:CopyTable({}, G.nameplates.filters[C.StyleFilterSelected]) or NP:StyleFilterCopyDefaults() UpdateFilterGroup() NP:ConfigureAll() end)
+StyleFitlers.triggers.args.resetFilter = ACH:Execute(L["Clear Filter"], L["Return filter to its default state."], 2, function() E.global.nameplates.filters[C.StyleFilterSelected] = E:CopyTable(NP:StyleFilterCopyDefaults(), G.nameplates.filters[C.StyleFilterSelected]) UpdateFilterGroup() NP:ConfigureAll() end)
 
 StyleFitlers.triggers.args.names = ACH:Group(L["Name"], nil, 6, nil, nil, nil, DisabledFilter)
 StyleFitlers.triggers.args.names.args.addName = ACH:Input(L["Add Name or NPC ID"], L["Add a Name or NPC ID to the list."], 1, nil, nil, nil, function(_, value) local triggers = GetFilter(true) triggers.names[value] = true UpdateFilterList('names', nil, value, true) NP:ConfigureAll() end, nil, nil, validateString)
@@ -666,6 +666,8 @@ local actionDefaults = {
 local function actionHidePlate() local _, actions = GetFilter(true) return actions and actions.hide end
 local function actionSubGroup(info, ...)
 	local _, actions = GetFilter(true)
+	if not actions then return end
+
 	if info.type == 'color' then
 		local t = actions[info[#info-1]][info[#info]]
 		local r, g, b, a = ...
@@ -712,7 +714,7 @@ StyleFitlers.actions.args.color.args.borderClass = ACH:Toggle(L["Unit Class Colo
 StyleFitlers.actions.args.texture = ACH:Group(L["Texture"], nil, 20, nil, actionSubGroup, actionSubGroup, actionHidePlate)
 StyleFitlers.actions.args.texture.inline = true
 StyleFitlers.actions.args.texture.args.enable = ACH:Toggle(L["Enable"], nil, 1)
-StyleFitlers.actions.args.texture.args.texture = ACH:SharedMediaStatusbar(L["Texture"], nil, 2, nil, nil, nil, function() local _, actions = GetFilter(true) return not actions.texture.enable end)
+StyleFitlers.actions.args.texture.args.texture = ACH:SharedMediaStatusbar(L["Texture"], nil, 2, nil, nil, nil, function() local _, actions = GetFilter(true) return actions and not actions.texture.enable end)
 
 StyleFitlers.actions.args.flash = ACH:Group(L["Flash"], nil, 30, nil, actionSubGroup, actionSubGroup, actionHidePlate)
 StyleFitlers.actions.args.flash.inline = true
@@ -721,7 +723,7 @@ StyleFitlers.actions.args.flash.args.color = ACH:Color(L["COLOR"], nil, 2, true)
 StyleFitlers.actions.args.flash.args.class = ACH:Toggle(L["Unit Class Color"], nil, 3)
 StyleFitlers.actions.args.flash.args.speed = ACH:Range(L["SPEED"], nil, nil, { min = 1, max = 10, step = 1 })
 
-StyleFitlers.actions.args.text_format = ACH:Group(L["Text Format"], nil, 40, nil, function(info) local _, actions = GetFilter(true) return actions.tags[info[#info]] end, function(info, value) local _, actions = GetFilter(true) actions.tags[info[#info]] = value NP:ConfigureAll() end)
+StyleFitlers.actions.args.text_format = ACH:Group(L["Text Format"], nil, 40, nil, function(info) local _, actions = GetFilter(true) return actions and actions.tags[info[#info]] end, function(info, value) local _, actions = GetFilter(true) if actions then actions.tags[info[#info]] = value NP:ConfigureAll() end end)
 StyleFitlers.actions.args.text_format.inline = true
 StyleFitlers.actions.args.text_format.args.info = ACH:Description(L["Controls the text displayed. Tags are available in the Available Tags section of the config."], 1, 'medium')
 StyleFitlers.actions.args.text_format.args.name = ACH:Input(L["Name"], nil, 1, nil, 'full')
