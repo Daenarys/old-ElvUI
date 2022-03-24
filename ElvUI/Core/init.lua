@@ -5,13 +5,13 @@
 ]]
 
 local _G, format, next = _G, format, next
-local gsub, pairs, type = gsub, pairs, type
+local gsub, pairs, tinsert, type = gsub, pairs, tinsert, type
 
-local BAG_ITEM_QUALITY_COLORS = BAG_ITEM_QUALITY_COLORS
 local CreateFrame = CreateFrame
 local GetAddOnEnableState = GetAddOnEnableState
 local GetAddOnMetadata = GetAddOnMetadata
 local DisableAddOn = DisableAddOn
+local IsAddOnLoaded = IsAddOnLoaded
 local ReloadUI = ReloadUI
 local GetLocale = GetLocale
 local GetTime = GetTime
@@ -76,10 +76,9 @@ E.Classic = WOW_PROJECT_ID == WOW_PROJECT_CLASSIC
 E.TBC = WOW_PROJECT_ID == (WOW_PROJECT_BURNING_CRUSADE_CLASSIC or 5)
 E.Wrath = false
 
--- Item Qualitiy stuff - used by MerathilisUI
+-- Item Qualitiy stuff, also used by MerathilisUI
 E.QualityColors = {}
-local qualityColors = BAG_ITEM_QUALITY_COLORS
-for index, value in pairs(qualityColors) do
+for index, value in pairs(_G.BAG_ITEM_QUALITY_COLORS) do
 	E.QualityColors[index] = {r = value.r, g = value.g, b = value.b}
 end
 E.QualityColors[-1] = {r = 0, g = 0, b = 0}
@@ -204,6 +203,10 @@ do
 		'ElvUI_QuestXP',
 		'ElvUI_CustomTags'
 	}
+
+	if not IsAddOnLoaded('ShadowedUnitFrames') then
+		tinsert(alwaysDisable, 'kExtraBossFrames')
+	end
 
 	for _, addon in next, alwaysDisable do
 		DisableAddOn(addon)
