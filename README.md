@@ -9,7 +9,10 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.73 [ ETA: 🍨 ]
+### Version 12.74 [ ETA: 🍨 ]
+
+___
+### Version 12.73 [ March 29th 2022 ]
 
 NamePlates: Added Castbar Display Target to Enemy NPC and Friendly NPC.  
 StyleFilter: Added several Unit Condition triggers: Another Players Pet, Guild, Trivial, Connected, Conscious, Possessed, Charmed states, Dead / Alive, and Being Resurrected.  
