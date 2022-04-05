@@ -9,7 +9,18 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.74 [ ETA: 🍨 ]
+### Version 12.75 [ ETA: 🍨 ]
+
+- stuff go here
+
+___
+### Version 12.74 [ April 4th 2022 ]
+
+Tags: Added [group:raid] which displays current group number only while in a raid  
+StyleFilters: Optimized execution quite a bit  
+UnitFrames: Vehicle not swapping units  
+Added PvP trinket effects: Gladiator's Resolve and Eternal Aegis  
+Repaired gold text will now match Vendored Grays money format  
 
 ___
 ### Version 12.73 [ March 29th 2022 ]
@@ -42,4 +53,4 @@ Optimized Alt Power Bar code a bit
 ___
 ### Version 12.70 [ March 12th 2022 ]
 
-Hotfix: fixed an issue with middle click focus  
+Hotfix: fixed an issue with middle click focus 
