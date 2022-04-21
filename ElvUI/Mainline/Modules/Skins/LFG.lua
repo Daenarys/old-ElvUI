@@ -219,24 +219,26 @@ function S:LookingForGroupFrames()
 		S:HandleCheckBox(roleButton.checkButton or roleButton.CheckButton, true)
 		roleButton:DisableDrawLayer("ARTWORK")
 		roleButton:DisableDrawLayer("OVERLAY")
-
+		
 		if(not roleButton.background) then
 			local isLeader = roleButton:GetName() ~= nil and roleButton:GetName():find("Leader") or false
 			if(not isLeader) then
 				roleButton.background = roleButton:CreateTexture(nil, "BACKGROUND")
 				roleButton.background:Size(80, 80)
-				roleButton.background:Point("CENTER")
+				roleButton.background:Point('CENTER')
 				roleButton.background:SetTexture("Interface\\LFGFrame\\UI-LFG-ICONS-ROLEBACKGROUNDS")
 				roleButton.background:SetAlpha(0.65)
 
 				local buttonName = roleButton:GetName() ~= nil and roleButton:GetName() or roleButton.role
-				roleButton.background:SetTexCoord(GetBackgroundTexCoordsForRole((strlower(buttonName):find("tank") and "TANK") or (strlower(buttonName):find("healer") and "HEALER") or "DAMAGER"))
+				roleButton.background:SetTexCoord(GetBackgroundTexCoordsForRole((strlower(buttonName):find('tank') and 'TANK') or (strlower(buttonName):find('healer') and 'HEALER') or 'DAMAGER'))
 			end
 		end
 	end
 
 	hooksecurefunc('SetCheckButtonIsRadio', function(button)
-		S:HandleCheckBox(button)
+		if not button.isSkinned then
+			S:HandleCheckBox(button)
+		end
 	end)
 
 	--Fix issue with role buttons overlapping each other (Blizzard bug)
@@ -245,10 +247,12 @@ function S:LookingForGroupFrames()
 		_G.LFGListApplicationDialog.HealerButton.CheckButton,
 		_G.LFGListApplicationDialog.DamagerButton.CheckButton,
 	}
+
 	for _, checkButton in pairs(repositionCheckButtons) do
 		checkButton:ClearAllPoints()
 		checkButton:Point('BOTTOMLEFT', 0, 0)
 	end
+
 	hooksecurefunc('LFGListApplicationDialog_UpdateRoles', function(dialog) --Copy from Blizzard, we just fix position
 		local availTank, availHealer, availDPS = C_LFGList_GetAvailableRoles()
 
@@ -394,11 +398,14 @@ function S:LookingForGroupFrames()
 	_G.LFRQueueFrameCommentScrollFrame:SetTemplate()
 	_G.LFRBrowseFrameColumnHeader1:Width(94) --Fix the columns being slightly off
 	_G.LFRBrowseFrameColumnHeader2:Width(38)
+	_G.LFDQueueFrameSpecificListScrollFrame:StripTextures()
 
 	_G.RaidBrowserFrame:SetTemplate('Transparent')
 	S:HandleCloseButton(_G.RaidBrowserFrameCloseButton)
 	S:HandleButton(_G.LFRQueueFrameFindGroupButton)
 	S:HandleButton(_G.LFRQueueFrameAcceptCommentButton)
+	S:HandleScrollBar(_G.LFRQueueFrameCommentScrollFrameScrollBar)
+	S:HandleScrollBar(_G.LFDQueueFrameSpecificListScrollFrameScrollBar)
 
 	local RoleButtons2 = {
 		_G.LFRQueueFrameRoleButtonHealer,
@@ -406,13 +413,11 @@ function S:LookingForGroupFrames()
 		_G.LFRQueueFrameRoleButtonTank,
 	}
 
-	S:HandleScrollBar(_G.LFRQueueFrameCommentScrollFrameScrollBar)
-	S:HandleScrollBar(_G.LFDQueueFrameSpecificListScrollFrameScrollBar)
-	_G.LFDQueueFrameSpecificListScrollFrame:StripTextures()
 	_G.RaidBrowserFrame:HookScript('OnShow', function()
 		if not _G.LFRQueueFrameSpecificListScrollFrameScrollBar.skinned then
 			S:HandleScrollBar(_G.LFRQueueFrameSpecificListScrollFrameScrollBar)
 			_G.LFRBrowseFrame:StripTextures()
+
 			for _, roleButton in pairs(RoleButtons2) do
 				roleButton:SetNormalTexture('')
 				S:HandleCheckBox(roleButton.checkButton, nil, true)
@@ -495,10 +500,10 @@ function S:LookingForGroupFrames()
 
 	S:HandleEditBox(LFGListFrame.EntryCreation.ItemLevel.EditBox)
 	S:HandleEditBox(LFGListFrame.EntryCreation.MythicPlusRating.EditBox)
-	S:HandleEditBox(LFGListFrame.EntryCreation.Name)
 	S:HandleEditBox(LFGListFrame.EntryCreation.PVPRating.EditBox)
 	S:HandleEditBox(LFGListFrame.EntryCreation.PvpItemLevel.EditBox)
 	S:HandleEditBox(LFGListFrame.EntryCreation.VoiceChat.EditBox)
+	S:HandleEditBox(LFGListFrame.EntryCreation.Name)
 
 	S:HandleDropDownBox(_G.LFGListEntryCreationActivityDropDown)
 	S:HandleDropDownBox(_G.LFGListEntryCreationGroupDropDown)
@@ -517,9 +522,10 @@ function S:LookingForGroupFrames()
 	LFGListFrame.EntryCreation.ActivityFinder.Dialog.BorderFrame:SetTemplate('Transparent')
 
 	S:HandleEditBox(LFGListFrame.EntryCreation.ActivityFinder.Dialog.EntryBox)
-	S:HandleScrollBar(_G.LFGListEntryCreationSearchScrollFrameScrollBar)
 	S:HandleButton(LFGListFrame.EntryCreation.ActivityFinder.Dialog.SelectButton)
 	S:HandleButton(LFGListFrame.EntryCreation.ActivityFinder.Dialog.CancelButton)
+	S:HandleScrollBar(_G.LFGListEntryCreationSearchScrollFrameScrollBar)
+	S:HandleScrollBar(_G.LFGListCreationDescriptionScrollBar)
 
 	_G.LFGListApplicationDialog:StripTextures()
 	_G.LFGListApplicationDialog:SetTemplate('Transparent')
@@ -605,8 +611,9 @@ function S:LookingForGroupFrames()
 	LFGListFrame.SearchPanel.AutoCompleteFrame:Point('TOPRIGHT', LFGListFrame.SearchPanel.SearchBox, 'BOTTOMRIGHT', -4, -8)
 
 	--ApplicationViewer (Custom Groups)
+	LFGListFrame.ApplicationViewer.InfoBackground:Hide() -- even the ugly borders are now an atlas on the texutre? wtf????
+	LFGListFrame.ApplicationViewer.InfoBackground:CreateBackdrop('Transparent')
 	LFGListFrame.ApplicationViewer.EntryName:FontTemplate()
-	LFGListFrame.ApplicationViewer.InfoBackground:SetTexCoord(unpack(E.TexCoords))
 	S:HandleCheckBox(LFGListFrame.ApplicationViewer.AutoAcceptButton)
 
 	LFGListFrame.ApplicationViewer.Inset:StripTextures()
@@ -615,6 +622,7 @@ function S:LookingForGroupFrames()
 	S:HandleButton(LFGListFrame.ApplicationViewer.NameColumnHeader, true)
 	S:HandleButton(LFGListFrame.ApplicationViewer.RoleColumnHeader, true)
 	S:HandleButton(LFGListFrame.ApplicationViewer.ItemLevelColumnHeader, true)
+	S:HandleButton(LFGListFrame.ApplicationViewer.RatingColumnHeader, true)
 	LFGListFrame.ApplicationViewer.NameColumnHeader:ClearAllPoints()
 	LFGListFrame.ApplicationViewer.NameColumnHeader:Point('BOTTOMLEFT', LFGListFrame.ApplicationViewer.Inset, 'TOPLEFT', 0, 1)
 	LFGListFrame.ApplicationViewer.NameColumnHeader.Label:FontTemplate()
@@ -624,6 +632,9 @@ function S:LookingForGroupFrames()
 	LFGListFrame.ApplicationViewer.ItemLevelColumnHeader:ClearAllPoints()
 	LFGListFrame.ApplicationViewer.ItemLevelColumnHeader:Point('LEFT', LFGListFrame.ApplicationViewer.RoleColumnHeader, 'RIGHT', 1, 0)
 	LFGListFrame.ApplicationViewer.ItemLevelColumnHeader.Label:FontTemplate()
+	LFGListFrame.ApplicationViewer.RatingColumnHeader:ClearAllPoints()
+	LFGListFrame.ApplicationViewer.RatingColumnHeader:Point('LEFT', LFGListFrame.ApplicationViewer.ItemLevelColumnHeader, 'RIGHT', 1, 0)
+	LFGListFrame.ApplicationViewer.RatingColumnHeader.Label:FontTemplate()
 	LFGListFrame.ApplicationViewer.PrivateGroup:FontTemplate()
 
 	S:HandleButton(LFGListFrame.ApplicationViewer.RefreshButton)
@@ -634,16 +645,27 @@ function S:LookingForGroupFrames()
 	S:HandleButton(LFGListFrame.ApplicationViewer.RemoveEntryButton, true)
 	S:HandleButton(LFGListFrame.ApplicationViewer.EditButton, true)
 	S:HandleButton(LFGListFrame.ApplicationViewer.BrowseGroupsButton, true)
-	LFGListFrame.ApplicationViewer.RemoveEntryButton:ClearAllPoints()
-	LFGListFrame.ApplicationViewer.RemoveEntryButton:Point('BOTTOMLEFT', -1, 3)
 	LFGListFrame.ApplicationViewer.EditButton:ClearAllPoints()
 	LFGListFrame.ApplicationViewer.EditButton:Point('BOTTOMRIGHT', -6, 3)
+	LFGListFrame.ApplicationViewer.BrowseGroupsButton:ClearAllPoints()
+	LFGListFrame.ApplicationViewer.BrowseGroupsButton:Point('BOTTOMLEFT', -1, 3)
+	LFGListFrame.ApplicationViewer.BrowseGroupsButton:Size(120, 22)
 
 	local LFGListApplicationViewerScrollFrameScrollBar = _G.LFGListApplicationViewerScrollFrameScrollBar
 	S:HandleScrollBar(LFGListApplicationViewerScrollFrameScrollBar)
 	LFGListApplicationViewerScrollFrameScrollBar:ClearAllPoints()
-	LFGListApplicationViewerScrollFrameScrollBar:Point('TOPLEFT', LFGListFrame.ApplicationViewer.Inset, 'TOPRIGHT', 0, -14)
-	LFGListApplicationViewerScrollFrameScrollBar:Point('BOTTOMLEFT', LFGListFrame.ApplicationViewer.Inset, 'BOTTOMRIGHT', 0, 14)
+	LFGListApplicationViewerScrollFrameScrollBar:Point('TOPLEFT', LFGListFrame.ApplicationViewer.Inset, 'TOPRIGHT', 0, -16)
+	LFGListApplicationViewerScrollFrameScrollBar:Point('BOTTOMLEFT', LFGListFrame.ApplicationViewer.Inset, 'BOTTOMRIGHT', 0, 16)
+
+	hooksecurefunc('LFGListApplicationViewer_UpdateInfo', function(frame)
+		frame.RemoveEntryButton:ClearAllPoints()
+
+		if UnitIsGroupLeader('player', LE_PARTY_CATEGORY_HOME) then
+			frame.RemoveEntryButton:Point('RIGHT', frame.EditButton, 'LEFT', -2, 0)
+		else
+			frame.RemoveEntryButton:Point('BOTTOMLEFT', -1, 3)
+		end
+	end)
 
 	hooksecurefunc('LFGListCategorySelection_AddButton', function(btn, btnIndex, categoryID, filters)
 		local button = btn.CategoryButtons[btnIndex]
@@ -683,29 +705,39 @@ function S:Blizzard_ChallengesUI()
 	-- Mythic+ KeyStoneFrame
 	local KeyStoneFrame = _G.ChallengesKeystoneFrame
 	KeyStoneFrame:SetTemplate('Transparent')
-	S:HandleCloseButton(KeyStoneFrame.CloseButton)
-	S:HandleButton(KeyStoneFrame.StartButton)
-	S:HandleIcon(KeyStoneFrame.KeystoneSlot.Texture, true)
-
 	KeyStoneFrame.DungeonName:FontTemplate(E.media.normFont, 26, 'OUTLINE')
 	KeyStoneFrame.TimeLimit:FontTemplate(E.media.normFont, 20, 'OUTLINE')
+
+	S:HandleButton(KeyStoneFrame.StartButton)
+	S:HandleCloseButton(KeyStoneFrame.CloseButton)
+	S:HandleIcon(KeyStoneFrame.KeystoneSlot.Texture, true)
+
+	KeyStoneFrame.KeystoneSlot:HookScript('OnEvent', function(frame, event, itemID)
+		if event == 'CHALLENGE_MODE_KEYSTONE_SLOTTED' and frame.Texture then
+			local texture = select(10, GetItemInfo(itemID))
+			if texture then
+				frame.Texture:SetTexture(texture)
+			end
+		end
+	end)
+
+	hooksecurefunc(KeyStoneFrame, 'OnKeystoneSlotted', HandleAffixIcons)
 
 	hooksecurefunc('ChallengesFrame_Update', function(frame)
 		for _, child in ipairs(frame.DungeonIcons) do
 			if not child.template then
 				child:GetRegions():SetAlpha(0)
-				child:SetTemplate('Transparent')
-				S:HandleIcon(child.Icon, true)
-				child.Icon:SetDrawLayer('ARTWORK')
-				child.HighestLevel:SetDrawLayer('OVERLAY')
+				child:SetTemplate()
 				child.Icon:SetInside()
+				S:HandleIcon(child.Icon)
 			end
+
+			child.Center:SetDrawLayer('BACKGROUND', -1)
 		end
 	end)
 
 	hooksecurefunc(ChallengesFrame.WeeklyInfo, 'SetUp', function(info)
-		local affixes = C_MythicPlus_GetCurrentAffixes()
-		if affixes then
+		if C_MythicPlus_GetCurrentAffixes() then
 			HandleAffixIcons(info.Child)
 		end
 	end)
@@ -719,14 +751,13 @@ function S:Blizzard_ChallengesUI()
 		frame.Divider:Hide()
 	end)
 
-	hooksecurefunc(KeyStoneFrame, 'OnKeystoneSlotted', HandleAffixIcons)
-
 	-- New Season Frame
 	local NoticeFrame = _G.ChallengesFrame.SeasonChangeNoticeFrame
 	S:HandleButton(NoticeFrame.Leave)
 	NoticeFrame:StripTextures()
 	NoticeFrame:SetTemplate()
-	NoticeFrame:SetFrameLevel(5)
+	NoticeFrame.Center:SetInside()
+	NoticeFrame.Center:SetDrawLayer('ARTWORK', 2)
 	NoticeFrame.NewSeason:SetTextColor(1, .8, 0)
 	NoticeFrame.NewSeason:SetShadowOffset(1, -1)
 	NoticeFrame.SeasonDescription:SetTextColor(1, 1, 1)

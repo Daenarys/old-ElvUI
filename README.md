@@ -9,29 +9,22 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.76 [ ETA: 🍨 ]
+### Version 12.77 [ ETA: 🍨 ]
+
+something something etc etc, dragons wow
+
+___
+### Version 12.76 [ April 20th 2022 ]
+
+UnitFrames: Add ability to change pet happiness colors  
+UnitFrames: Add ability to hide Rest Icon at max level  
+UnitFrames: Add ability to scale the Raid Role Icon  
+UnitFrames: Readd missing option to Show/Hide Spec Icon on Arena frames  
+Skins: Adjusted the 2 tabs on the Macro skin to accommodate larger toon names  
+Tooltips: Fix tooltip count on Enchant crafting window when mousing over the reagents  
 
 ___
 ### Version 12.75 [ April 9th 2022 ]
 
 NamePlates: Add missing Style Filter defaults for party/raid  
 NamePlates: Add Pet Battle, Not Resting, No Target style filter condition  
-
-___
-### Version 12.74 [ April 4th 2022 ]
-
-Tags: Added [group:raid] which displays current group number only while in a raid  
-StyleFilters: Optimized execution quite a bit  
-UnitFrames: Vehicle not swapping units  
-Added PvP trinket effects: Gladiator's Resolve and Eternal Aegis  
-Repaired gold text will now match Vendored Grays money format  
-
-___
-### Version 12.73 [ March 29th 2022 ]
-
-NamePlates: Added Castbar Display Target to Enemy NPC and Friendly NPC.  
-StyleFilter: Added several Unit Condition triggers: Another Players Pet, Guild, Trivial, Connected, Conscious, Possessed, Charmed states, Dead / Alive, and Being Resurrected.  
-UnitFrames: Fixed range (again)  
-UnitFrames: Fix castbar custom backdrop color if set to a class color from not displaying other class colors properly if using the same profile that originally set the option.  
-UnitFrames: Fix castbar custom backdrop when using reverse option.  
-UnitFrames: Added Castbar Display Target to Pet and Boss frames.  
