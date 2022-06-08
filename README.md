@@ -9,38 +9,17 @@ Changes so far:
 - Reverted Chat Tab stuff
 
 ___
-### Version 12.80 [ ETA: 🍨 ]
+### Version 12.81 [ ETA: 🍨 ]
 
-:)
 
-___
-### Version 12.79 [ May 8th 2022 ]
-
-NamePlates: fixed target indicator displaying many arrows  
-DataTexts: added label / no label for durability and bags  
-DataTexts: custom labels can be colorized with color tags  
 
 ___
-### Version 12.78 [ May 6th 2022 ]
+### Version 12.80 [ May 31th 2022 ]
 
-StyleFilter: fix a couple import and export bugs  
-Chat: block other secure commands like /focus from being saved to editbox history  
-NamePlates: fixed debuffs being able to attach to debuffs in options  
-NamePlates: block widget tooltips on forbidden nameplates  
-NamePlates: added new Prefer Target Color option along with Low Health Color and Low Health Half color settings  
-Cooldowns: fixed Rogue Stealth displaying as nan and flashing too often  
-Filters: blacklisted A Gilded Perspective  
-
-___
-### Version 12.77 [ May 1st 2022 ]
-
-Aurabars: Fixed alignment with size override setting  
-Cooldown Text: Added support for cooldown reduction buffs (Urh Relic, Faeries, etc) with a color setting under Threshold Colors "Modified Rate"  
-DataTexts: Added option for time DataText to disable flashing for new calendar invites  
+ActionBars: Stance bar fixes (issue #163)  
+DataTexts: Added noLabel option for combat timer text  
 Locales: Updated deDE (Credits: Dlarge)  
-Locales: Updated zhTW (Credits: fang2hou)  
-Misc: Fixed Raid Utility not saving position correctly  
-Nameplates: Added ability to export and import selected style filters  
-Tooltip: Added font options for tooltip header  
-Unitframes: Player Classbar now have an option to toggle Displaying Mana  
-UnitFrames: Readded "Start Near Center" option for party  
+NamePlates: Fixed class color source option for interrupts  
+Skins: Updated guild crafters skin  
+Skins: Updated world map quest skin (issue #128)  
+UnitFrames: Fixed power text getting misplaced onto health if power is hidden (issue #15)  
